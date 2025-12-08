@@ -49,10 +49,10 @@ def pytest_configure(config):
     }
 
 
-@pytest.mark.optionalhook
-def pytest_metadata(metadata):
-    metadata.pop('Plugins', None)
-    metadata.pop('Packages', None)
+# @pytest.mark.optionalhook
+# def pytest_metadata(metadata):
+#     metadata.pop('Plugins', None)
+#     metadata.pop('Packages', None)
 
 
 @pytest.hookimpl(tryfirst=True)
