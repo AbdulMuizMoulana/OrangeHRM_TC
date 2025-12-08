@@ -14,21 +14,21 @@ Reuse methods through utilities and helper classes
 Support data-driven testing
 **This framework is suitable for functional testing, regression testing, and smoke testing.**
 
-**📂 Project Structure**
-OrangeHRM/
-├── .venv/                       # Virtual environment (ignored in git)
-├── assets/                      # Any project assets (optional)
-├── configuration/               # Config files, env variables, URLs, credentials
-├── logs/                        # Automation logs generated during runs
-├── pages/                       # Page Object Model classes (POM)
-├── Reports/                     # HTML reports, XML reports, junit reports
-├── screenshots/                 # Screenshots captured on test failure
-├── testCases/                   # All pytest test scripts
-├── utilities/                   # Utility functions (Excel, waits, logging, helpers)
-├── AIO_TestCases.xlsx           # Test data Excel file
-├── pytest.ini                   # Pytest configuration file
-├── requirements.txt             # Python dependencies list
-└── Screen Recording 2025-11-07 120303.mp4   # Recorded test run (large file)
+**OrangeHRM/**
+├── .venv/                        # Virtual environment (ignored in git)
+├── assets/                       # Optional project assets
+├── configuration/                # Config files, URLs, credentials
+├── logs/                         # Automation logs
+├── pages/                        # Page Object Model classes (POM)
+├── Reports/                      # HTML, XML, JUnit test reports
+├── screenshots/                  # Screenshots captured on failure
+├── testCases/                    # All pytest-based test scripts
+├── utilities/                    # Helpers (Excel, waits, logger, readers)
+├── AIO_TestCases.xlsx            # Test data (Excel)
+├── pytest.ini                    # Pytest configuration
+├── requirements.txt              # Project dependencies
+└── Screen Recording 2025-11-07 120303.mp4   # Recorded test run
+
 
 
 **🚀 How to Run the Tests**
