@@ -1,5 +1,8 @@
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 class PIMContactDetailsPage:
     contact_details_xpath = "//a[contains(text(),'Contact Details')]"
@@ -25,7 +28,7 @@ class PIMContactDetailsPage:
         self.driver = driver
 
     def click_contact_details(self):
-        self.driver.find_element(By.XPATH, self.contact_details_xpath).click()
+        WebDriverWait(self.driver,10).until(EC.visibility_of_element_located((By.XPATH, self.contact_details_xpath))).click()
 
     def enter_street1(self, street_1):
         self.driver.find_element(By.XPATH, self.street_1_input_xpath).send_keys(street_1)

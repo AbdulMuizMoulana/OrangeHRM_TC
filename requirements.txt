@@ -3,5 +3,4 @@ selenium
 pytest-xdist
 pytest-html
 pytest-metadata
-allure-pytest
 openpyxl

@@ -30,7 +30,7 @@ class TestUpdateMyInfo:
         test_update_info.click_myinfo()
         test_update_info.update_firstname(self.new_f_name)
         test_update_info.update_lastname(self.new_l_name)
-        test_update_info.update_emp_id("420")
+        test_update_info.update_emp_id("421")
         test_update_info.update_gender()
         test_update_info.click_save_details()
 

@@ -36,9 +36,9 @@ class TestLeavePage:
         test_leave_page.click_leave()
         test_leave_page.click_apply()
         test_leave_page.select_leave_type()
-        test_leave_page.enter_from_date("2025-30-12")
+        test_leave_page.enter_from_date("2025-16-12")
         time.sleep(3)
-        test_leave_page.enter_to_date("2025-30-12")
+        test_leave_page.enter_to_date("2025-16-12")
         time.sleep(3)
         test_leave_page.select_duration()
         time.sleep(3)
@@ -74,20 +74,20 @@ class TestLeavePage:
         test_assign_leave.click_leave()
         test_assign_leave.click_assign_leave_button()
         test_assign_leave.enter_emp_name(self.emp_name)
-        test_assign_leave.enter_from_date("2025-31-12")
+        test_assign_leave.enter_from_date("2025-17-12")
         time.sleep(2)
-        test_assign_leave.enter_to_date("2025-31-12")
+        test_assign_leave.enter_to_date("2025-17-12")
         time.sleep(2)
         test_assign_leave.select_assign_leave_type()
         time.sleep(2)
         test_assign_leave.select_duration()
         time.sleep(2)
-        test_assign_leave.enter_comment("TEST_assing leave i needed leave")
+        test_assign_leave.enter_comment("TEST_assign leave i needed leave")
         time.sleep(3)
         test_assign_leave.click_assign_submit()
 
-        success_message= driver.find_element(By.XPATH,"//p[text()='Successfully Saved']").text
-        if "Successfully Saved" in success_message:
+        success_message= driver.find_element(By.XPATH,"//p[text()='Successfully Saved']")
+        if "Successfully Saved" in success_message.text:
             print("Successfully Saved")
             assert True
             driver.close()

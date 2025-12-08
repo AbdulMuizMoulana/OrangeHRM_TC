@@ -30,7 +30,6 @@ class MyInfoPage:
 
     def update_emp_id(self, emp_id):
         e_id = self.driver.find_element(By.XPATH, self.input_emp_id_xpath)
-        e_id.click()
         e_id.send_keys(Keys.CONTROL, 'a')  # Select all
         e_id.send_keys(Keys.DELETE)  # Clear
         e_id.send_keys(emp_id)
