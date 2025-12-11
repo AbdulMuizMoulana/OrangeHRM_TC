@@ -19,6 +19,7 @@ def browser(request):
 def setup(browser):
     # Detect headless mode (GitHub Actions sets HEADLESS=true)
     headless = os.getenv("HEADLESS", "false").lower() in ("true", "1", "yes")
+    print("HEADLESS MODE =", headless)
 
     if browser.lower() == "chrome":
         options = webdriver.ChromeOptions()
