@@ -18,62 +18,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install system dependencies (Chromium)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            xvfb \
-            libxi6 \
-            libgconf-2-4 \
-            libnss3 \
-            libxss1 \
-            libatk-bridge2.0-0 \
-            libgtk-3-0 \
-            fonts-liberation \
-            libasound2 \
-            libxrandr2 \
-            chromium-browser
-          # Print chromium version for diagnostics
-          chromium-browser --version || true
-
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          # ensure webdriver-manager is available (used by conftest)
-          pip install webdriver-manager
 
-      - name: Show runtime info (debug)
-        run: |
-          echo "HEADLESS env will be set for tests"
-          echo "CHROME_BIN=/usr/bin/chromium-browser"
-          chromium-browser --version || true
-          if command -v chromedriver >/dev/null 2>&1; then chromedriver --version || true; else echo "chromedriver not in PATH"; fi
-
-      - name: Run tests (headless)
-        env:
-          HEADLESS: "true"
-          CHROME_BIN: /usr/bin/chromium-browser
+      - name: Run tests
         run: |
           mkdir -p test-results
-          # run pytest and save junit xml; do not stop job on failures so artifacts still upload
-          pytest --maxfail=1 --junitxml=test-results/results-${{ matrix.python-version }}.xml -q || true
-
-      - name: Show chromedriver log (if any)
-        if: always()
-        run: |
-          echo "=== chromedriver.log (tail) ==="
-          if [ -f chromedriver.log ]; then
-            tail -n +1 chromedriver.log || true
-          else
-            echo "chromedriver.log not found"
-          fi
-        continue-on-error: true
+          pytest --junitxml=test-results/results-${{ matrix.python-version }}.xml || true
 
       - name: Upload pytest results
         if: always()
@@ -81,12 +39,4 @@ jobs:
         with:
           name: pytest-results-${{ matrix.python-version }}
           path: test-results/
-          if-no-files-found: ignore
-
-      - name: Upload chromedriver log (diagnostic)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: chromedriver-log-${{ matrix.python-version }}
-          path: chromedriver.log
           if-no-files-found: ignore
