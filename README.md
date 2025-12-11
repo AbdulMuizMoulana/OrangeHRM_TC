@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 OrangeHRM Automation Testing Framework
 
 Automated test framework for OrangeHRM using Python, Selenium, Pytest, and Page Object Model (POM).
@@ -116,3 +117,6 @@ Create a separate branch for new tests or enhancements.
 This project is for learning & testing automation practice.
 
 Best of luck for your next commit
+=======
+# OrangeHRM_TC
+>>>>>>> 1d8f6d6c2928b3a80743262cf3c431f09e5cacbc

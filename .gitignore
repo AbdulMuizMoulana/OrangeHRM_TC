@@ -205,6 +205,7 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+<<<<<<< HEAD
 
 # ------------------------
 # QA Automation Additions
@@ -238,3 +239,5 @@ screenshots/
 configuration/*.json
 configuration/*.env
 
+=======
+>>>>>>> 1d8f6d6c2928b3a80743262cf3c431f09e5cacbc
