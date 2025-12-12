@@ -1,4 +1,9 @@
+import os
+from pathlib import Path
+
 import pytest
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from utilities.ReadProperties import ReadConfig
 from pages.LoginPage import LoginPage
@@ -10,27 +15,30 @@ class TestDashboardPage:
     password = ReadConfig.get_password()
     BASE_URL = ReadConfig.get_base_url()
 
+    SCREENSHOT_DIR = Path.cwd() / "screenshots"
+    SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
+
     @pytest.mark.smoke
     def test_dashboard_end_session_003(self, setup):
         driver = setup
         driver.get(self.BASE_URL)
-        driver.maximize_window()
-        driver.implicitly_wait(5)
 
-        test_login_page = LoginPage(driver)
-        test_login_page.enter_username(self.username)
-        test_login_page.enter_password(self.password)
-        test_login_page.click_login()
+        # Login
+        login = LoginPage(driver)
+        login.enter_username(self.username)
+        login.enter_password(self.password)
+        login.click_login()
 
-        test_dashboard_page = Dashboard(driver)
-        test_dashboard_page.click_profile_btn()
-        test_dashboard_page.click_logout()
+        # Logout via dashboard
+        dashboard = Dashboard(driver)
+        dashboard.click_profile_btn()
+        dashboard.click_logout()
 
-        current_url = driver.current_url
-        if current_url == self.BASE_URL:
-            assert True
-            driver.close()
-        else:
-            driver.save_screenshot(".\\screenshots\\DashboardTest.png")
-            driver.close()
-            assert False
+        # Wait for the URL to become the expected base URL (or login page URL)
+        try:
+            WebDriverWait(driver, 10).until(EC.url_to_be(self.BASE_URL))
+            assert driver.current_url == self.BASE_URL
+        except Exception:
+            screenshot_path = str(self.SCREENSHOT_DIR / "DashboardTest.png")
+            driver.save_screenshot(screenshot_path)
+            pytest.fail(f"Logout did not redirect to expected URL. Screenshot: {screenshot_path}")

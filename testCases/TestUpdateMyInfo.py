@@ -1,5 +1,9 @@
 import pytest
+from pathlib import Path
+
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from pages.LoginPage import LoginPage
 from pages.MyInfoPage import MyInfoPage
@@ -11,46 +15,59 @@ class TestUpdateMyInfo:
     password = ReadConfig.get_password()
     BASE_URL = ReadConfig.get_base_url()
 
-    new_f_name = "sabari"
-    new_l_name = "Tarkuri"
+    new_f_name = "akash"
+    new_l_name = "lala"
+
+    SCREENSHOT_DIR = Path.cwd() / "screenshots"
+    SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
+
+    def _screenshot_and_fail(self, driver, name, message):
+        path = str(self.SCREENSHOT_DIR / name)
+        driver.save_screenshot(path)
+        pytest.fail(f"{message} Screenshot: {path}")
 
     @pytest.mark.smoke
     def test_update_my_info_014(self, setup):
         driver = setup
         driver.get(self.BASE_URL)
-        driver.maximize_window()
-        driver.implicitly_wait(5)
 
-        test_login_page = LoginPage(driver)
-        test_login_page.enter_username(self.username)
-        test_login_page.enter_password(self.password)
-        test_login_page.click_login()
+        # Login
+        login = LoginPage(driver)
+        login.enter_username(self.username)
+        login.enter_password(self.password)
+        login.click_login()
 
-        test_update_info = MyInfoPage(driver)
-        test_update_info.click_myinfo()
-        test_update_info.update_firstname(self.new_f_name)
-        test_update_info.update_lastname(self.new_l_name)
-        test_update_info.update_emp_id("421")
-        test_update_info.update_gender()
-        test_update_info.click_save_details()
+        # Update My Info
+        myinfo = MyInfoPage(driver)
+        myinfo.click_myinfo()
+        myinfo.update_firstname(self.new_f_name)
+        myinfo.update_lastname(self.new_l_name)
+        myinfo.update_emp_id("4222")
+        myinfo.update_gender()
+        myinfo.click_save_details()
 
-        success_message = driver.find_element(By.XPATH, "//p[text()='Successfully Updated']")
+        # Wait for success toast/message
+        try:
+            WebDriverWait(driver, 12).until(
+                EC.visibility_of_element_located((By.XPATH, "//p[text()='Successfully Updated']"))
+            )
+        except Exception as e:
+            self._screenshot_and_fail(driver, "update_myinfo_no_success.png",
+                                      f"'Successfully Updated' message not found: {e}")
 
-        if "Successfully Updated" in success_message.text:
-            print("Successfully Updated")
-
+        # Refresh and verify updated name appears in topbar/user area
+        # driver.refresh()
+        try:
             driver.refresh()
-            update_name =driver.find_element(By.XPATH, "//div[@class='oxd-topbar-header-userarea']//span//p").text
-
-            if self.new_f_name in update_name:
-                print(f"{self.new_f_name} + {self.new_l_name}")
+            name_elem = WebDriverWait(driver, 12).until(
+                EC.visibility_of_element_located((By.XPATH, "//div[@class='oxd-topbar-header-userarea']//span//p"))
+            )
+            displayed_name = name_elem.text
+            if self.new_f_name.lower() in displayed_name.lower():
+                assert True
             else:
-                print("not found")
-
-            assert True
-            driver.close()
-
-        else:
-            print("Failed to Update")
-            driver.close()
-            assert False
+                self._screenshot_and_fail(driver, "update_myinfo_name_mismatch.png",
+                                          f"Expected first name '{self.new_f_name}' in '{displayed_name}'")
+        except Exception as e:
+            self._screenshot_and_fail(driver, "update_myinfo_name_not_found.png",
+                                      f"Updated name element not found after refresh: {e}")

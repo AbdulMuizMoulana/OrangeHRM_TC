@@ -19,7 +19,7 @@ class LeavePage:
     # Assign leave locators
     button_assign_leave_xpath = "//a[text()='Assign Leave']"
     input_emp_name_xpath = "//input[@placeholder='Type for hints...']"
-    leave_type_annual_xpath = "//div/label[text()='Leave Type']/parent::div/following-sibling::div//span[text()='Annual']"
+    leave_type_annual_xpath = "//div/label[text()='Leave Type']/parent::div/following-sibling::div//span[text()='Annuall']"
     input_from_date_xpath = "//div/label[text()='From Date']/parent::div/following-sibling::div//input"
     input_to_date_xpath = "//div/label[text()='To Date']/parent::div/following-sibling::div//input"
     button_assign_xpath = "//button[@type='submit']"

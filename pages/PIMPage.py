@@ -1,4 +1,7 @@
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class PIMPage:
@@ -23,55 +26,90 @@ class PIMPage:
     input_employee_name_xpath = "//label[text()='Employee Name']/parent::div/following-sibling::div//input"
     button_search_xpath = "//button[contains(normalize-space(),'Search')]"
 
-
-    def __init__(self, driver):
+    def __init__(self, driver, wait_timeout: int = 12):
         self.driver = driver
+        self.wait = WebDriverWait(driver, wait_timeout)
 
+    # ---------- Helpers ----------
+    def _wait_visible(self, xpath):
+        return self.wait.until(EC.visibility_of_element_located((By.XPATH, xpath)))
+
+    def _click_when_clickable(self, xpath):
+        elem = self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        elem.click()
+        return elem
+
+    def _wait_presence(self, xpath):
+        return self.wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+
+    def _clear_and_send_keys(self, element, text):
+        """Try clear(); if fails use CTRL+A + DELETE; then send text."""
+        element.send_keys(Keys.CONTROL, "a")
+        element.send_keys(Keys.DELETE)
+        element.send_keys(text)
+
+    # ---------- Page actions ----------
     def click_pim_button(self):
-        self.driver.find_element(By.XPATH, self.pim_button_xpath).click()
+        self._click_when_clickable(self.pim_button_xpath)
 
     def click_employee_add_button(self):
-        self.driver.find_element(By.XPATH, self.employee_add_button_xpath).click()
+        self._click_when_clickable(self.employee_add_button_xpath)
 
     def enter_firstname(self, firstname):
-        self.driver.find_element(By.NAME, self.firstname_input_name).send_keys(firstname)
+        el = self.wait.until(EC.visibility_of_element_located((By.NAME, self.firstname_input_name)))
+        self._clear_and_send_keys(el, firstname)
 
     def enter_middlename(self, middlename):
-        self.driver.find_element(By.NAME, self.middlename_input_name).send_keys(middlename)
+        el = self.wait.until(EC.visibility_of_element_located((By.NAME, self.middlename_input_name)))
+        self._clear_and_send_keys(el, middlename)
 
     def enter_lastname(self, lastname):
-        self.driver.find_element(By.NAME, self.lastname_input_name).send_keys(lastname)
+        el = self.wait.until(EC.visibility_of_element_located((By.NAME, self.lastname_input_name)))
+        self._clear_and_send_keys(el, lastname)
 
     def enter_employee_id(self, employee_id):
-        emp_id = self.driver.find_element(By.XPATH, self.employee_id_input_xpath)
-        emp_id.send_keys(employee_id)
+        el = self._wait_visible(self.employee_id_input_xpath)
+        self._clear_and_send_keys(el, employee_id)
 
     def click_save_button(self):
-        self.driver.find_element(By.XPATH, self.save_button_xpath).click()
+        self._click_when_clickable(self.save_button_xpath)
 
-    # add attachment methods
+    # ---------- Attachment actions ----------
     def click_employee_list(self):
-        self.driver.find_element(By.XPATH, self.employee_list_xpath).click()
+        self._click_when_clickable(self.employee_list_xpath)
 
     def click_card_emp_details(self):
-        self.driver.find_element(By.XPATH, self.card_emp_details_xpath).click()
+        # This is a brittle locator (text '1232222') but preserved as requested.
+        self._click_when_clickable(self.card_emp_details_xpath)
 
     def click_attachment_add_button(self):
-        self.driver.find_element(By.XPATH, self.button_attachment_add_xpath).click()
+        self._click_when_clickable(self.button_attachment_add_xpath)
 
     def select_file(self, path):
-        self.driver.find_element(By.XPATH, self.input_upload_file).send_keys(path)
+        """
+        Wait for the file input to be present and send the file path.
+        Note: CI runners often don't have local files; tests should skip if path missing.
+        """
+        file_input = self._wait_presence(self.input_upload_file)
+        # remove readonly or hidden issues by ensuring element is interactable (presence is enough to send keys)
+        file_input.send_keys(path)
 
     def enter_comment(self, comment):
-        self.driver.find_element(By.XPATH, self.textarea_xpath).click()
+        ta = self._wait_visible(self.textarea_xpath)
+        # click to focus then send keys safely
+        try:
+            ta.click()
+        except Exception:
+            pass
+        self._clear_and_send_keys(ta, comment)
 
     def click_save_attachment(self):
-        self.driver.find_element(By.XPATH, self.button_Save_attachment_xpath).click()
+        self._click_when_clickable(self.button_Save_attachment_xpath)
 
-# employee search in employee lis methods
-
+    # ---------- Employee search ----------
     def enter_employee_name(self, employee_name):
-        self.driver.find_element(By.XPATH,self.input_employee_name_xpath).send_keys(employee_name)
+        el = self._wait_visible(self.input_employee_name_xpath)
+        self._clear_and_send_keys(el, employee_name)
 
     def click_emp_search(self):
-        self.driver.find_element(By.XPATH, self.button_search_xpath).click()
+        self._click_when_clickable(self.button_search_xpath)

@@ -1,5 +1,9 @@
 import pytest
+from pathlib import Path
+
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from pages.LoginPage import LoginPage
 from pages.PIMContactDetailsPage import PIMContactDetailsPage
@@ -13,45 +17,56 @@ class TestPimContactDetailsPage:
     password = ReadConfig.get_password()
     BASE_URL = ReadConfig.get_base_url()
 
+    SCREENSHOT_DIR = Path.cwd() / "screenshots"
+    SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
+
+    def _screenshot_and_fail(self, driver, name, message):
+        path = str(self.SCREENSHOT_DIR / name)
+        driver.save_screenshot(path)
+        pytest.fail(f"{message} Screenshot: {path}")
+
     @pytest.mark.smoke
     def test_pim_contact_details_006(self, setup):
         driver = setup
         driver.get(self.BASE_URL)
-        driver.maximize_window()
-        driver.implicitly_wait(5)
 
-        test_login_page = LoginPage(driver)
-        test_login_page.enter_username(self.username)
-        test_login_page.enter_password(self.password)
-        test_login_page.click_login()
+        # Login
+        login = LoginPage(driver)
+        login.enter_username(self.username)
+        login.enter_password(self.password)
+        login.click_login()
 
-        test_pim_page = PIMPage(driver)
-        test_pim_page.click_pim_button()
-        test_pim_page.click_employee_add_button()
-        test_pim_page.enter_firstname("John")
-        test_pim_page.enter_middlename("nitin")
-        test_pim_page.enter_lastname("Doe")
-        test_pim_page.enter_employee_id("abc123")
-        test_pim_page.click_save_button()
+        # Add employee
+        pim = PIMPage(driver)
+        pim.click_pim_button()
+        pim.click_employee_add_button()
+        pim.enter_firstname("John")
+        pim.enter_middlename("nitin")
+        pim.enter_lastname("Doe")
+        pim.enter_employee_id("abc123")
+        pim.click_save_button()
 
-        test_pip_contact_details = PIMContactDetailsPage(driver)
-        test_pip_contact_details.click_contact_details()
-        test_pip_contact_details.enter_street1("abcd 233")
-        test_pip_contact_details.enter_city("udupi")
-        test_pip_contact_details.enter_state("karnataka")
-        # test_pip_contact_details.select_country("Afghanistan")
-        test_pip_contact_details.enter_zip_code("560068")
-        test_pip_contact_details.enter_mobile_phone_number("8951648603")
-        mail = random_string_generator()+"@test.com"
-        test_pip_contact_details.enter_work_email(mail)
-        test_pip_contact_details.click_save_button()
+        # Contact details
+        contact = PIMContactDetailsPage(driver)
+        contact.click_contact_details()
+        contact.enter_street1("abcd 233")
+        contact.enter_city("udupi")
+        contact.enter_state("karnataka")
+        # contact.select_country("Afghanistan")  # enable if needed
+        contact.enter_zip_code("560068")
+        contact.enter_mobile_phone_number("8951648603")
+        mail = random_string_generator() + "@test.com"
+        contact.enter_work_email(mail)
+        contact.click_save_button()
 
-        success_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'Successfully Updated')]")
-        if "Successfully Updated" in success_message.text:
-            print("Successfully Updated")
-            assert True
-            driver.close()
-        else:
-            driver.save_screenshot(".\\screenshots\\ContactDetails.png")
-            driver.close()
-            assert False
+        # Wait for success message
+        try:
+            success_elem = WebDriverWait(driver, 12).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//p[contains(normalize-space(),'Successfully Updated')]")
+                )
+            )
+            assert "Successfully Updated" in success_elem.text
+        except Exception as e:
+            self._screenshot_and_fail(driver, "ContactDetails_failed.png",
+                                      f"'Successfully Updated' message not found: {e}")

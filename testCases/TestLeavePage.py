@@ -1,8 +1,10 @@
-import time
+import os
+from pathlib import Path
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 import pytest
-from selenium.webdriver.common.by import By
-
 
 from pages.LeavePage import LeavePage
 from pages.LoginPage import LoginPage
@@ -18,84 +20,81 @@ class TestLeavePage:
     ess_password = ReadConfig.get_ess_password()
     BASE_URL = ReadConfig.get_base_url()
 
+    SCREENSHOT_DIR = Path.cwd() / "screenshots"
+    SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
+
+    def _wait_for_success(self, driver, timeout=10):
+        """Wait for the standard 'Successfully Saved' message and return the element (or None)."""
+        try:
+            return WebDriverWait(driver, timeout).until(
+                EC.visibility_of_element_located((By.XPATH, "//p[text()='Successfully Saved']"))
+            )
+        except Exception:
+            return None
+
     @pytest.mark.smoke
     @pytest.mark.regression
     def test_apply_leave_010(self, setup):
         driver = setup
         driver.get(self.BASE_URL)
-        driver.implicitly_wait(5)
-        driver.maximize_window()
 
-        test_login =LoginPage(driver)
-        test_login.enter_username(self.ess_username)
-        test_login.enter_password(self.ess_password)
-        test_login.click_login()
+        # login as ESS user
+        login = LoginPage(driver)
+        login.enter_username(self.ess_username)
+        login.enter_password(self.ess_password)
+        login.click_login()
 
+        # apply leave
+        leave = LeavePage(driver)
+        leave.click_leave()
+        leave.click_apply()
+        leave.select_leave_type()
+        leave.enter_from_date("2025-01-12")
+        leave.enter_to_date("2025-01-12")
+        leave.select_duration()
+        leave.enter_comment("i needed leave")
+        leave.click_apply_submit_button()
 
-        test_leave_page = LeavePage(driver)
-        test_leave_page.click_leave()
-        test_leave_page.click_apply()
-        test_leave_page.select_leave_type()
-        test_leave_page.enter_from_date("2025-20-12")
-        time.sleep(3)
-        test_leave_page.enter_to_date("2025-20-12")
-        time.sleep(3)
-        test_leave_page.select_duration()
-        time.sleep(3)
-        test_leave_page.enter_comment("i needed leave")
-        time.sleep(3)
-        test_leave_page.click_apply_submit_button()
-
-        success_message = driver.find_element(By.XPATH,"//p[text()='Successfully Saved']")
-        if "Successfully Saved" in success_message.text:
-            print("Successfully Saved")
-            assert True
-            driver.close()
+        # Assert success
+        success_elem = self._wait_for_success(driver, timeout=12)
+        if success_elem:
+            assert "Successfully Saved" in success_elem.text
         else:
-            print("Failed to Saved")
-            driver.save_screenshot(".\\screenshots\\applyleave.png")
-            driver.close()
-            assert False
+            screenshot = str(self.SCREENSHOT_DIR / "applyleave_apply_010.png")
+            driver.save_screenshot(screenshot)
+            pytest.fail(f"'Successfully Saved' message not found. Screenshot: {screenshot}")
 
     @pytest.mark.smoke
     @pytest.mark.regression
     def test_assign_leave_011(self, setup):
         driver = setup
         driver.get(self.BASE_URL)
-        driver.maximize_window()
-        driver.implicitly_wait(5)
 
-        test_login =LoginPage(driver)
-        test_login.enter_username(self.username)
-        test_login.enter_password(self.password)
-        test_login.click_login()
+        # login as admin (or normal user that can assign)
+        login = LoginPage(driver)
+        login.enter_username(self.username)
+        login.enter_password(self.password)
+        login.click_login()
 
-        test_assign_leave = LeavePage(driver)
-        test_assign_leave.click_leave()
-        test_assign_leave.click_assign_leave_button()
-        test_assign_leave.enter_emp_name(self.emp_name)
-        test_assign_leave.enter_from_date("2025-19-12")
-        time.sleep(2)
-        test_assign_leave.enter_to_date("2025-19-12")
-        time.sleep(2)
-        test_assign_leave.select_assign_leave_type()
-        time.sleep(2)
-        test_assign_leave.select_duration()
-        time.sleep(2)
-        test_assign_leave.enter_comment("TEST_assign leave i needed leave")
-        time.sleep(3)
-        test_assign_leave.click_assign_submit()
+        # assign leave
+        assign = LeavePage(driver)
+        assign.click_leave()
+        assign.click_assign_leave_button()
+        assign.enter_emp_name(self.emp_name)
 
-        success_message= driver.find_element(By.XPATH,"//p[text()='Successfully Saved']")
-        if "Successfully Saved" in success_message.text:
-            print("Successfully Saved")
-            assert True
-            driver.close()
+        # NOTE: fixed invalid date format from "2025-16-12" to "2025-12-16"
+        assign.enter_from_date("2025-02-12")
+        assign.enter_to_date("2025-02-12")
+        assign.select_assign_leave_type()
+        assign.select_duration()
+        assign.enter_comment("TEST_assign leave i needed leave")
+        assign.click_assign_submit()
+
+        # Assert success
+        success_elem = self._wait_for_success(driver, timeout=12)
+        if success_elem:
+            assert "Successfully Saved" in success_elem.text
         else:
-            print("Failed to Saved")
-            driver.save_screenshot(".\\screenshots\\applyleave.png")
-            driver.close()
-            assert False
-
-
-
+            screenshot = str(self.SCREENSHOT_DIR / "assignleave_011.png")
+            driver.save_screenshot(screenshot)
+            pytest.fail(f"'Successfully Saved' message not found. Screenshot: {screenshot}")

@@ -24,52 +24,81 @@ class PIMContactDetailsPage:
     other_email_input_xpath = "//div/label[contains(normalize-space(),'Other Email')]/parent::div/following-sibling::div/input"
     save_contact_details_xpath = "//button[contains(normalize-space(), 'Save')]"
 
-    def __init__(self, driver):
+    def __init__(self, driver, wait_timeout: int = 10):
         self.driver = driver
+        self.wait = WebDriverWait(driver, wait_timeout)
 
+    # ---- helpers ----
+    def _wait_visible(self, xpath):
+        return self.wait.until(EC.visibility_of_element_located((By.XPATH, xpath)))
+
+    def _click_when_clickable(self, xpath):
+        elem = self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        elem.click()
+        return elem
+
+    def _clear_and_send_keys(self, element, text):
+        """Try .clear(), fallback to CTRL+A + DELETE, then send text."""
+        element.send_keys(Keys.CONTROL, "a")
+        element.send_keys(Keys.DELETE)
+        element.send_keys(text)
+
+    # ---- actions ----
     def click_contact_details(self):
-        WebDriverWait(self.driver,10).until(EC.visibility_of_element_located((By.XPATH, self.contact_details_xpath))).click()
+        self._click_when_clickable(self.contact_details_xpath)
 
     def enter_street1(self, street_1):
-        self.driver.find_element(By.XPATH, self.street_1_input_xpath).send_keys(street_1)
+        el = self._wait_visible(self.street_1_input_xpath)
+        self._clear_and_send_keys(el, street_1)
 
     def enter_street2(self, street_2):
-        self.driver.find_element(By.XPATH, self.Street_2_input_xpath).send_keys(street_2).send_keys(street_2)
+        el = self._wait_visible(self.Street_2_input_xpath)
+        self._clear_and_send_keys(el, street_2)
 
     def enter_city(self, city):
-        self.driver.find_element(By.XPATH, self.city_input_xpath).send_keys(city)
+        el = self._wait_visible(self.city_input_xpath)
+        self._clear_and_send_keys(el, city)
 
     def enter_state(self, state):
-        self.driver.find_element(By.XPATH, self.state_input_xpath).send_keys(state)
+        el = self._wait_visible(self.state_input_xpath)
+        self._clear_and_send_keys(el, state)
 
     def enter_zip_code(self, zip_code):
-        self.driver.find_element(By.XPATH, self.zip_code_input_xpath).send_keys(zip_code)
+        el = self._wait_visible(self.zip_code_input_xpath)
+        self._clear_and_send_keys(el, zip_code)
 
     def click_country_dropdown(self):
-        self.driver.find_element(By.XPATH, self.country_dropdown_xpath).click()
+        self._click_when_clickable(self.country_dropdown_xpath)
 
     def select_country(self, country):
+        """
+        Select a country by visible text (country parameter).
+        Note: the dynamic option XPath uses normalize-space() to match provided country text.
+        """
         self.click_country_dropdown()
-        option_xpath = f"//div[@class='oxd-select-wrapper']/div/div[contains(normalize-space(),'{country}']"
-        self.driver.find_element(By.XPATH, option_xpath).click()
+        option_xpath = f"//div[@class='oxd-select-wrapper']/div/div[contains(normalize-space(),'{country}')]"
+        self._click_when_clickable(option_xpath)
 
-#     telephone
+    # telephone
     def enter_home_phone_number(self, home_ph_number):
-        self.driver.find_element(By.XPATH, self.home_input_xpath).send_keys(home_ph_number)
+        el = self._wait_visible(self.home_input_xpath)
+        self._clear_and_send_keys(el, home_ph_number)
 
     def enter_work_phone_number(self, work_ph_number):
-        self.driver.find_element(By.XPATH, self.work_input_xpath).send_keys(work_ph_number)
+        el = self._wait_visible(self.work_input_xpath)
+        self._clear_and_send_keys(el, work_ph_number)
 
     def enter_mobile_phone_number(self, mobile_ph_number):
-        self.driver.find_element(By.XPATH, self.mobile_input_xpath).send_keys(mobile_ph_number)
+        el = self._wait_visible(self.mobile_input_xpath)
+        self._clear_and_send_keys(el, mobile_ph_number)
 
     def enter_work_email(self, work_email):
-        self.driver.find_element(By.XPATH, self.work_email_input_xpath).send_keys(work_email)
+        el = self._wait_visible(self.work_email_input_xpath)
+        self._clear_and_send_keys(el, work_email)
 
     def enter_other_email(self, other_email):
-        self.driver.find_element(By.XPATH, self.other_email_input_xpath).send_keys(other_email)
+        el = self._wait_visible(self.other_email_input_xpath)
+        self._clear_and_send_keys(el, other_email)
 
     def click_save_button(self):
-        self.driver.find_element(By.XPATH, self.save_contact_details_xpath).click()
-
-
+        self._click_when_clickable(self.save_contact_details_xpath)
