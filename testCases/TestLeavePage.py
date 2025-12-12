@@ -82,7 +82,6 @@ class TestLeavePage:
         assign.click_assign_leave_button()
         assign.enter_emp_name(self.emp_name)
 
-        # NOTE: fixed invalid date format from "2025-16-12" to "2025-12-16"
         assign.enter_from_date("2025-02-12")
         assign.enter_to_date("2025-02-12")
         assign.select_assign_leave_type()

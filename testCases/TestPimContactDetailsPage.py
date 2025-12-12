@@ -61,7 +61,7 @@ class TestPimContactDetailsPage:
 
         # Wait for success message
         try:
-            success_elem = WebDriverWait(driver, 12).until(
+            success_elem = WebDriverWait(driver, 15).until(
                 EC.visibility_of_element_located(
                     (By.XPATH, "//p[contains(normalize-space(),'Successfully Updated')]")
                 )

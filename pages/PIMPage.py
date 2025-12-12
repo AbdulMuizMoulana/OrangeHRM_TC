@@ -36,8 +36,7 @@ class PIMPage:
 
     def _click_when_clickable(self, xpath):
         elem = self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-        elem.click()
-        return elem
+        return elem.click()
 
     def _wait_presence(self, xpath):
         return self.wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
@@ -85,14 +84,9 @@ class PIMPage:
     def click_attachment_add_button(self):
         self._click_when_clickable(self.button_attachment_add_xpath)
 
+
     def select_file(self, path):
-        """
-        Wait for the file input to be present and send the file path.
-        Note: CI runners often don't have local files; tests should skip if path missing.
-        """
-        file_input = self._wait_presence(self.input_upload_file)
-        # remove readonly or hidden issues by ensuring element is interactable (presence is enough to send keys)
-        file_input.send_keys(path)
+        self.driver.find_element(By.XPATH, self.input_upload_file).send_keys(path)
 
     def enter_comment(self, comment):
         ta = self._wait_visible(self.textarea_xpath)
