@@ -1,4 +1,5 @@
 import os
+import time
 from pathlib import Path
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -79,11 +80,12 @@ class TestLeavePage:
         # assign leave
         assign = LeavePage(driver)
         assign.click_leave()
+        time.sleep(3)
         assign.click_assign_leave_button()
         assign.enter_emp_name(self.emp_name)
 
-        assign.enter_from_date("2025-02-12")
-        assign.enter_to_date("2025-02-12")
+        assign.enter_from_date("2025-04-12")
+        assign.enter_to_date("2025-04-12")
         assign.select_assign_leave_type()
         assign.select_duration()
         assign.enter_comment("TEST_assign leave i needed leave")
@@ -91,8 +93,8 @@ class TestLeavePage:
 
         # Assert success
         success_elem = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//p[text()='Successfully Saved']")))
-        if "Successfully Saved" in success_elem.text:
+            EC.visibility_of_element_located((By.XPATH, "//p[text()='Successfully Saved']"))).text
+        if "Successfully Saved" in success_elem:
             assert True
         else:
             screenshot = str(self.SCREENSHOT_DIR / "Assignleave_apply_010.png")

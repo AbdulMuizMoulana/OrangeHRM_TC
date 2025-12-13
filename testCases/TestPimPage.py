@@ -112,7 +112,7 @@ class TestPimPage:
         success_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'Successfully Saved')]")
         if "Successfully Saved" in success_message.text:
             print("Successfully Saved")
-            record = WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+            record = WebDriverWait(driver, 15).until(EC.visibility_of_element_located(
                 (By.XPATH, "//div[text()='AIO_TestCases.xlsx']/parent::div/parent::div")))
             if record.is_displayed():
                 print("successfully displayed record in list")
@@ -168,6 +168,7 @@ class TestPimPage:
 
         test_employee_search = PIMPage(driver)
         test_employee_search.click_pim_button()
+        time.sleep(3)
         test_employee_search.enter_employee_name("abcd12df3")
         test_employee_search.click_emp_search()
 
