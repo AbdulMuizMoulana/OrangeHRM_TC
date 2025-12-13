@@ -169,7 +169,7 @@ class TestPimPage:
         test_employee_search = PIMPage(driver)
         test_employee_search.click_pim_button()
         time.sleep(3)
-        test_employee_search.enter_employee_name("abcd12df3")
+        test_employee_search.enter_firstname("abcd12df3")
         test_employee_search.click_emp_search()
 
         error_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'No Records Found')]")
