@@ -17,7 +17,7 @@ class LeavePage:
     apply_button_xpath = "//button[text()=' Apply ']"
 
     # Assign leave locators
-    button_assign_leave_xpath = "//a[text()='Assign Leave']"
+    button_assign_leave_xpath = "//a[normalize-space()='Assign Leave']"
     input_emp_name_xpath = "//input[@placeholder='Type for hints...']"
     leave_type_annual_xpath = "//div/label[text()='Leave Type']/parent::div/following-sibling::div//span[text()='Annuall']"
     input_from_date_xpath = "//div/label[text()='From Date']/parent::div/following-sibling::div//input"
@@ -55,7 +55,7 @@ class LeavePage:
 
     # Assign leaves methods
     def click_assign_leave_button(self):
-        assign_leave =WebDriverWait(self.driver,10).until(EC.presence_of_element_located((By.XPATH, self.button_assign_leave_xpath)))
+        assign_leave =WebDriverWait(self.driver,14).until(EC.presence_of_element_located((By.XPATH, self.button_assign_leave_xpath)))
         assign_leave.click()
 
     def enter_emp_name(self, emp_name):

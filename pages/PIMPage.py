@@ -1,4 +1,3 @@
-
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -27,7 +26,6 @@ class PIMPage:
     input_employee_name_xpath = "//label[text()='Employee Name']/parent::div/following-sibling::div//input"
     button_search_xpath = "//button[contains(normalize-space(),'Search')]"
 
-
     def __init__(self, driver, wait_timeout: int = 12):
         self.driver = driver
         self.wait = WebDriverWait(driver, wait_timeout)
@@ -51,7 +49,7 @@ class PIMPage:
 
     # ---------- Page actions ----------
     def click_pim_button(self):
-        self._click_when_clickable(self.pim_button_xpath)
+        self._wait_visible(self.pim_button_xpath).click()
 
     def click_employee_add_button(self):
         self._click_when_clickable(self.employee_add_button_xpath)
@@ -85,7 +83,6 @@ class PIMPage:
 
     def click_attachment_add_button(self):
         self._wait_presence(self.button_attachment_add_xpath).click()
-
 
     def select_file(self, path):
         file = self._wait_presence(self.input_upload_file)
