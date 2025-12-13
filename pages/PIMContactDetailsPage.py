@@ -34,8 +34,8 @@ class PIMContactDetailsPage:
 
     def _click_when_clickable(self, xpath):
         elem = self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-        elem.click()
-        return elem
+        return elem.click()
+
 
     def _clear_and_send_keys(self, element, text):
         """Try .clear(), fallback to CTRL+A + DELETE, then send text."""

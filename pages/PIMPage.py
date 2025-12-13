@@ -105,8 +105,8 @@ class PIMPage:
 
     # ---------- Employee search ----------
     def enter_employee_name(self, employee_name):
-        el = self._wait_visible(self.input_employee_name_xpath)
+        el = self._wait_presence(self.input_employee_name_xpath)
         self._clear_and_send_keys(el, employee_name)
 
     def click_emp_search(self):
-        self._click_when_clickable(self.button_search_xpath)
+        self._wait_presence(self.button_search_xpath).click()

@@ -109,15 +109,14 @@ class TestPimPage:
         test_add_attachments.enter_comment("this example file")
         test_add_attachments.click_save_attachment()
 
-        success_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'Successfully Saved')]").text
-        if "Successfully Saved" in success_message:
+        success_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'Successfully Saved')]")
+        if "Successfully Saved" in success_message.text:
             print("Successfully Saved")
             record = WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
                 (By.XPATH, "//div[text()='AIO_TestCases.xlsx']/parent::div/parent::div")))
             if record.is_displayed():
                 print("successfully displayed record in list")
                 assert True
-                driver.close()
         else:
             print("Failed to Saved")
             screenshot = str(self.SCREENSHOT_DIR / "attachments_failed_04.png")
@@ -169,11 +168,11 @@ class TestPimPage:
 
         test_employee_search = PIMPage(driver)
         test_employee_search.click_pim_button()
-        test_employee_search.enter_employee_name("abcd12f3")
+        test_employee_search.enter_employee_name("abcd12df3")
         test_employee_search.click_emp_search()
 
-        error_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'No Records Found')]").text
-        if "No Records Found" in error_message:
+        error_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'No Records Found')]")
+        if "No Records Found" in error_message.text:
             print("displaying error message as No Records Found")
             assert True
             driver.close()
