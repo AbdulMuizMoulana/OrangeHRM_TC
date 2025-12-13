@@ -1,3 +1,4 @@
+
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -25,6 +26,7 @@ class PIMPage:
     # employee_search
     input_employee_name_xpath = "//label[text()='Employee Name']/parent::div/following-sibling::div//input"
     button_search_xpath = "//button[contains(normalize-space(),'Search')]"
+
 
     def __init__(self, driver, wait_timeout: int = 12):
         self.driver = driver
@@ -75,18 +77,19 @@ class PIMPage:
 
     # ---------- Attachment actions ----------
     def click_employee_list(self):
-        self._click_when_clickable(self.employee_list_xpath)
+        self._wait_visible(self.employee_list_xpath)
 
     def click_card_emp_details(self):
         # This is a brittle locator (text '1232222') but preserved as requested.
         self._click_when_clickable(self.card_emp_details_xpath)
 
     def click_attachment_add_button(self):
-        self._click_when_clickable(self.button_attachment_add_xpath)
+        self._wait_presence(self.button_attachment_add_xpath).click()
 
 
     def select_file(self, path):
-        self.driver.find_element(By.XPATH, self.input_upload_file).send_keys(path)
+        file = self._wait_presence(self.input_upload_file)
+        file.send_keys(path)
 
     def enter_comment(self, comment):
         ta = self._wait_visible(self.textarea_xpath)
@@ -98,7 +101,7 @@ class PIMPage:
         self._clear_and_send_keys(ta, comment)
 
     def click_save_attachment(self):
-        self._click_when_clickable(self.button_Save_attachment_xpath)
+        self._wait_visible(self.button_Save_attachment_xpath).click()
 
     # ---------- Employee search ----------
     def enter_employee_name(self, employee_name):

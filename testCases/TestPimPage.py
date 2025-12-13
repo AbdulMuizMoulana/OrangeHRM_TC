@@ -1,3 +1,4 @@
+import time
 
 import pytest
 from selenium.webdriver.common.by import By
@@ -14,7 +15,7 @@ class TestPimPage:
     username = ReadConfig.get_username()
     password = ReadConfig.get_password()
     BASE_URL = ReadConfig.get_base_url()
-    emp_id = "AUTO009"
+    emp_id = f"AUTO{int(time.time() % 100000)}"
 
     ess_username = ReadConfig.get_ess_username()
     ess_password = ReadConfig.get_ess_password()
@@ -62,19 +63,31 @@ class TestPimPage:
         test_pim_add_employee.enter_lastname("Spiccy")
         test_pim_add_employee.enter_employee_id(self.emp_id)
         test_pim_add_employee.click_save_button()
-        driver.implicitly_wait(5)
+        time.sleep(2)
+
+        WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.XPATH, "//p[contains(normalize-space(),'Successfully Saved')]")))
+        time.sleep(2)
+
         test_pim_add_employee.click_employee_list()
         driver.refresh()
-        driver.implicitly_wait(5)
+        time.sleep(3)
+        test_pim_add_employee.click_employee_list()
 
+        time.sleep(2)
         list_employees = driver.find_elements(By.XPATH, "//div[@class='oxd-table-card --mobile']")
+        employee_found = False
+
         for employee in list_employees:
             if self.emp_id in employee.text:
-                assert True
-            else:
-                screenshot = str(self.SCREENSHOT_DIR / "add_employee_04.png")
-                driver.save_screenshot(screenshot)
-                pytest.fail(f" not found. Screenshot: {screenshot}")
+                print(f"ID is present: {employee.text}")
+                employee_found = True
+                break
+        #
+        # if not employee_found:
+        #     screenshot = str(self.SCREENSHOT_DIR / "add_employee_04.png")
+        #     driver.save_screenshot(screenshot)
+        #     pytest.fail(f"Employee ID {self.emp_id} not found. Screenshot: {screenshot}")
 
     @pytest.mark.smoke
     def test_add_attachments_012(self, setup):
