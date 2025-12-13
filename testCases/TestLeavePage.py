@@ -79,6 +79,7 @@ class TestLeavePage:
 
         # assign leave
         assign = LeavePage(driver)
+        time.sleep(3)
         assign.click_leave()
         time.sleep(3)
         assign.click_assign_leave_button()
