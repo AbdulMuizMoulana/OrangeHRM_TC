@@ -55,8 +55,9 @@ class LeavePage:
 
     # Assign leaves methods
     def click_assign_leave_button(self):
-        assign_leave = WebDriverWait(self.driver,14).until(EC.visibility_of_element_located((By.XPATH, self.button_assign_leave_xpath)))
-        assign_leave.click()
+            WebDriverWait(self.driver, 20).until(
+                EC.element_to_be_clickable((By.XPATH, self.button_assign_leave_xpath))
+            ).click()
 
     def enter_emp_name(self, emp_name):
         self.driver.find_element(By.XPATH, self.input_emp_name_xpath).click()
