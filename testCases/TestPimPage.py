@@ -108,8 +108,8 @@ class TestPimPage:
         test_add_attachments.select_file(str(self.attachment_file))
         test_add_attachments.enter_comment("this example file")
         test_add_attachments.click_save_attachment()
-
-        success_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'Successfully Saved')]").text
+        success_message= WebDriverWait(driver,10).until(EC.visibility_of_element_located((By.XPATH,"//p[contains(normalize-space(),'Successfully Saved')]"))).text
+        # success_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'Successfully Saved')]").text
         if "Successfully Saved" in success_message:
             print("Successfully Saved")
             time.sleep(2)

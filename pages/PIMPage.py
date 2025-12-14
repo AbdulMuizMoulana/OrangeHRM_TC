@@ -25,8 +25,9 @@ class PIMPage:
     # employee_search
     input_employee_name_xpath = "//label[text()='Employee Name']/parent::div/following-sibling::div//input"
     button_search_xpath = "//button[contains(normalize-space(),'Search')]"
+    dropdown_emp_information ="//i[@class='oxd-icon bi-caret-down-fill']"
 
-    def __init__(self, driver, wait_timeout: int = 12):
+    def __init__(self, driver, wait_timeout: int = 20):
         self.driver = driver
         self.wait = WebDriverWait(driver, wait_timeout)
 
@@ -102,7 +103,17 @@ class PIMPage:
 
     # ---------- Employee search ----------
     def enter_employee_name(self, employee_name):
-        self._wait_visible(self.input_employee_name_xpath).send_keys(employee_name)
+        try:
+            self._wait_presence(self.input_employee_name_xpath).send_keys(employee_name)
+        except:
+            self._wait_visible(self.dropdown_emp_information).click()
+            self._wait_presence(self.input_employee_name_xpath).send_keys(employee_name)
+
+
+
+
 
     def click_emp_search(self):
         self._wait_presence(self.button_search_xpath).click()
+
+

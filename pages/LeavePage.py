@@ -24,6 +24,8 @@ class LeavePage:
     input_to_date_xpath = "//div/label[text()='To Date']/parent::div/following-sibling::div//input"
     button_assign_xpath = "//button[@type='submit']"
     emp_name_option_xpath ="//span[text()='Abdul Muyeez Moulana']"
+    button_more_xpath ="//span[normalize-space()='More']"
+
 
     def __init__(self, driver):
         self.driver = driver
@@ -61,15 +63,15 @@ class LeavePage:
 
     def click_assign_leave_button(self):
         try:
-            WebDriverWait(self.driver, 20).until(
+            WebDriverWait(self.driver, 12).until(
                 EC.element_to_be_clickable((By.XPATH, self.button_assign_leave_xpath))
             ).click()
         except:
             # fallback for CI pipeline
-            element = WebDriverWait(self.driver, 20).until(
-                EC.presence_of_element_located((By.XPATH, self.button_assign_leave_xpath))
-            )
-            self.driver.execute_script("arguments[0].click();", element)
+            WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, self.button_more_xpath))).click()
+            WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, self.button_assign_leave_xpath))).click()
+
+
 
     def enter_emp_name(self, emp_name):
         self.driver.find_element(By.XPATH, self.input_emp_name_xpath).click()
