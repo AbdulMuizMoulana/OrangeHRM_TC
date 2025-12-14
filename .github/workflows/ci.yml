@@ -32,10 +32,6 @@ jobs:
       - name: Install Chrome
         uses: browser-actions/setup-chrome@v1
 
-      - name: Run tests
-        run: |
-          pytest --maxfail=1 --disable-warnings -q
-
       - name: Run tests (pytest)
         run: |
           mkdir -p test-results Reports screenshots
