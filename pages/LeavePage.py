@@ -54,10 +54,22 @@ class LeavePage:
         self.driver.find_element(By.XPATH, self.apply_button_xpath).click()
 
     # Assign leaves methods
+    # def click_assign_leave_button(self):
+    #         WebDriverWait(self.driver, 20).until(
+    #             EC.element_to_be_clickable((By.XPATH, self.button_assign_leave_xpath))
+    #         ).click()
+
     def click_assign_leave_button(self):
+        try:
             WebDriverWait(self.driver, 20).until(
                 EC.element_to_be_clickable((By.XPATH, self.button_assign_leave_xpath))
             ).click()
+        except:
+            # fallback for CI pipeline
+            element = WebDriverWait(self.driver, 20).until(
+                EC.presence_of_element_located((By.XPATH, self.button_assign_leave_xpath))
+            )
+            self.driver.execute_script("arguments[0].click();", element)
 
     def enter_emp_name(self, emp_name):
         self.driver.find_element(By.XPATH, self.input_emp_name_xpath).click()
