@@ -68,8 +68,13 @@ class PIMPage:
         self._clear_and_send_keys(el, lastname)
 
     def enter_employee_id(self, employee_id):
-        el = self._wait_visible(self.employee_id_input_xpath)
-        self._clear_and_send_keys(el, employee_id)
+        try:
+            el = self._wait_visible(self.employee_id_input_xpath)
+            self._clear_and_send_keys(el, employee_id)
+        except:
+            self._wait_visible(self.dropdown_emp_information).click()
+            el = self._wait_visible(self.employee_id_input_xpath)
+            self._clear_and_send_keys(el, employee_id)
 
     def click_save_button(self):
         self._click_when_clickable(self.save_button_xpath)
@@ -114,7 +119,11 @@ class PIMPage:
 
 
     def click_emp_search(self):
-        self._wait_presence(self.button_search_xpath).click()
+        try:
+            self._wait_presence(self.button_search_xpath).click()
+        except:
+            self._wait_visible(self.dropdown_emp_information).click()
+            self._wait_visible(self.button_search_xpath).click()
 
     # def enter_employee_id(self,emp_id):
     #     self._wait_visible(self.input_emp_id_xpath).send_keys(emp_id)
