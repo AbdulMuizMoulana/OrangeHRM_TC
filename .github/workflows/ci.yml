@@ -32,10 +32,17 @@ jobs:
       - name: Install Chrome
         uses: browser-actions/setup-chrome@v1
 
+#      - name: Run tests (pytest)
+#        run: |
+#          mkdir -p test-results Reports screenshots
+#          pytest -m smoke -v -s testCases/ \
+#            --junitxml=test-results/junit.xml \
+#            --html=Reports/pytest-report.html
+
       - name: Run tests (pytest)
         run: |
           mkdir -p test-results Reports screenshots
-          pytest -m smoke -v -s testCases/ \
+          pytest -v -s testCases/ \
             --junitxml=test-results/junit.xml \
             --html=Reports/pytest-report.html
 
