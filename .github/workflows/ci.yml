@@ -35,7 +35,7 @@ jobs:
       - name: Run tests (pytest)
         run: |
           mkdir -p test-results Reports screenshots
-          pytest -v -s testCases/ \
+          pytest -m smoke -v -s testCases/ \
             --junitxml=test-results/junit.xml \
             --html=Reports/pytest-report.html
 

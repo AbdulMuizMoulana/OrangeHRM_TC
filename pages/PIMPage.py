@@ -26,7 +26,7 @@ class PIMPage:
     input_employee_name_xpath = "//label[text()='Employee Name']/parent::div/following-sibling::div//input"
     button_search_xpath = "//button[contains(normalize-space(),'Search')]"
     dropdown_emp_information ="//i[@class='oxd-icon bi-caret-down-fill']"
-
+    input_emp_id_xpath = "//label[text()='Employee Id']/parent::div/following-sibling::div/input"
     def __init__(self, driver, wait_timeout: int = 20):
         self.driver = driver
         self.wait = WebDriverWait(driver, wait_timeout)
@@ -76,7 +76,7 @@ class PIMPage:
 
     # ---------- Attachment actions ----------
     def click_employee_list(self):
-        self._wait_visible(self.employee_list_xpath)
+        self._wait_visible(self.employee_list_xpath).click()
 
     def click_card_emp_details(self):
         # This is a brittle locator (text '1232222') but preserved as requested.
@@ -115,5 +115,8 @@ class PIMPage:
 
     def click_emp_search(self):
         self._wait_presence(self.button_search_xpath).click()
+
+    # def enter_employee_id(self,emp_id):
+    #     self._wait_visible(self.input_emp_id_xpath).send_keys(emp_id)
 
 

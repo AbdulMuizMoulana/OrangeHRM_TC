@@ -20,7 +20,6 @@ class TestPimPage:
     ess_username = ReadConfig.get_ess_username()
     ess_password = ReadConfig.get_ess_password()
 
-
     PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
     attachment_file = PROJECT_ROOT / "AIO_TestCases.xlsx"
@@ -67,15 +66,16 @@ class TestPimPage:
 
         WebDriverWait(driver, 15).until(
             EC.presence_of_element_located((By.XPATH, "//p[contains(normalize-space(),'Successfully Saved')]")))
-        time.sleep(2)
+        time.sleep(5)
 
         test_pim_add_employee.click_employee_list()
         driver.refresh()
         time.sleep(3)
-        test_pim_add_employee.click_employee_list()
 
-        time.sleep(2)
-        list_employees = driver.find_elements(By.XPATH, "//div[@class='oxd-table-card --mobile']")
+        test_pim_add_employee.enter_employee_id(self.emp_id)
+        test_pim_add_employee.click_emp_search()
+        list_employees = driver.find_elements(By.XPATH, "//div[@class='oxd-table-card']/div")
+
         employee_found = False
 
         for employee in list_employees:
@@ -84,10 +84,10 @@ class TestPimPage:
                 employee_found = True
                 break
         #
-        # if not employee_found:
-        #     screenshot = str(self.SCREENSHOT_DIR / "add_employee_04.png")
-        #     driver.save_screenshot(screenshot)
-        #     pytest.fail(f"Employee ID {self.emp_id} not found. Screenshot: {screenshot}")
+        if not employee_found:
+            screenshot = str(self.SCREENSHOT_DIR / "add_employee_04.png")
+            driver.save_screenshot(screenshot)
+            pytest.fail(f"Employee ID {self.emp_id} not found. Screenshot: {screenshot}")
 
     @pytest.mark.smoke
     def test_add_attachments_012(self, setup):
@@ -108,7 +108,8 @@ class TestPimPage:
         test_add_attachments.select_file(str(self.attachment_file))
         test_add_attachments.enter_comment("this example file")
         test_add_attachments.click_save_attachment()
-        success_message= WebDriverWait(driver,10).until(EC.visibility_of_element_located((By.XPATH,"//p[contains(normalize-space(),'Successfully Saved')]"))).text
+        success_message = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//p[contains(normalize-space(),'Successfully Saved')]"))).text
         # success_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'Successfully Saved')]").text
         if "Successfully Saved" in success_message:
             print("Successfully Saved")
