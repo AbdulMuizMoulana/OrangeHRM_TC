@@ -53,7 +53,7 @@ class LeavePage:
         self.driver.find_element(By.XPATH, self.comment_textarea_xpath).send_keys(comment)
 
     def click_apply_submit_button(self):
-        self.driver.find_element(By.XPATH, self.apply_button_xpath).click()
+        WebDriverWait(self.driver,10).until(EC.visibility_of_element_located((By.XPATH, self.apply_button_xpath))).click()
 
     # Assign leaves methods
     # def click_assign_leave_button(self):

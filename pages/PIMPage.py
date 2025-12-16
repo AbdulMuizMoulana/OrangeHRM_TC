@@ -120,7 +120,7 @@ class PIMPage:
 
     def click_emp_search(self):
         try:
-            self._wait_presence(self.button_search_xpath).click()
+            self._wait_visible(self.button_search_xpath).click()
         except:
             self._wait_visible(self.dropdown_emp_information).click()
             self._wait_visible(self.button_search_xpath).click()
