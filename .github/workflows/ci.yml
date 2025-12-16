@@ -14,6 +14,7 @@ jobs:
       HEADLESS: "true"
       IMPLICIT_WAIT: "5"
       PYTHONUNBUFFERED: "1"
+      PYTEST_ADDOPTS: "--log-cli-level=INFO"   #  Show logs in GitHub Actions
 
     steps:
       - name: Checkout repository
@@ -32,16 +33,12 @@ jobs:
       - name: Install Chrome
         uses: browser-actions/setup-chrome@v1
 
-#      - name: Run tests (pytest)
-#        run: |
-#          mkdir -p test-results Reports screenshots
-#          pytest -m smoke -v -s testCases/ \
-#            --junitxml=test-results/junit.xml \
-#            --html=Reports/pytest-report.html
+      - name: Install ChromeDriver   # Required for Selenium
+        uses: nanasess/setup-chromedriver@v2
 
       - name: Run tests (pytest)
         run: |
-          mkdir -p test-results Reports screenshots
+          mkdir -p test-results Reports screenshots   #  Capitalized to match conftest
           pytest -v -s testCases/ \
             --junitxml=test-results/junit.xml \
             --html=Reports/pytest-report.html
@@ -67,5 +64,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: screenshots
-          path: screenshots/
+          path: screenshots/         # ✅ Corrected path
           if-no-files-found: ignore

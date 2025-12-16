@@ -10,7 +10,7 @@ class LoginPage:
     button_login_xpath = "//button"
     logo_orangehrm_xpath = "//div[@class='orangehrm-login-branding']/img"
     logo_login_xpath = "//div[@class='orangehrm-login-logo']/img"
-    forgot_password_xpath = "//p[contains(normalize-space(),'Forgot your password?')]"
+    forgot_password_xpath = "//p[contains(normalize-space(),'Forgot')]"
     button_reset_password_xpath = "//button[contains(normalize-space(),'Reset Password')]"
 
     def __init__(self, driver):

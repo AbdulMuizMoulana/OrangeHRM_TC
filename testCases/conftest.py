@@ -3,6 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
+import pytest_html
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as GeckoService
@@ -110,22 +111,84 @@ def setup(browser):
         pass
 
 
+
 def _default_report_path() -> str:
-    # Reports folder inside project root
     reports_dir = Path.cwd() / "Reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
-    filename = datetime.now().strftime("%d-%m-%y_%H-%M-%S") + ".html"
+    filename = datetime.now().strftime("TestReport_%d-%m-%Y_%H-%M-%S.html")
     return str(reports_dir / filename)
 
 
 def pytest_configure(config):
-    # Add custom metadata
-    config._metadata = {
-        "Tester": "Abdul Muyeez",
-        "Project": "Login Automation",
-        "Browser": "Chrome"
-    }
-
-    # Set HTML report path if html plugin present and not already provided
-    if hasattr(config.option, "htmlpath") and not config.option.htmlpath:
+    # Force custom report filename
+    if hasattr(config.option, "htmlpath"):
         config.option.htmlpath = _default_report_path()
+
+
+def pytest_html_results_summary(prefix, summary, postfix):
+    prefix.extend([
+        "Tester: Abdul Muyeez",
+        "Project: Login Automation",
+        "Browser: Chrome"
+    ])
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+
+    if report.when == "call" and report.failed:
+        driver = item.funcargs.get("setup")  # YOUR WebDriver fixture
+        if driver:
+            screenshot = driver.get_screenshot_as_base64()
+            report.extra = getattr(report, "extra", [])
+            report.extra.append(
+                pytest_html.extras.image(screenshot, mime_type='image/png')
+            )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def _default_report_path() -> str:
+#     # Reports folder inside project root
+#     reports_dir = Path.cwd() / "Reports"
+#     reports_dir.mkdir(parents=True, exist_ok=True)
+#     filename = datetime.now().strftime("%d-%m-%y_%H-%M-%S") + ".html"
+#     return str(reports_dir / filename)
+#
+#
+# def pytest_configure(config):
+#     # Add custom metadata
+#     config._metadata = {
+#         "Tester": "Abdul Muyeez",
+#         "Project": "Login Automation",
+#         "Browser": "Chrome"
+#     }
+# # Set HTML report path if html plugin present and not already provided
+#     if hasattr(config.option, "htmlpath") and not config.option.htmlpath:
+#         config.option.htmlpath = _default_report_path()
