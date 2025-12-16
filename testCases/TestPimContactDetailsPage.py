@@ -43,7 +43,7 @@ class TestPimContactDetailsPage:
         pim.enter_firstname("John")
         pim.enter_middlename("nitin")
         pim.enter_lastname("Doe")
-        pim.enter_employee_id("abc123")
+        pim.enter_employee_id("adc123")
         pim.click_save_button()
 
         # Contact details

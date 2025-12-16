@@ -74,6 +74,7 @@ class TestPimPage:
 
         test_pim_add_employee.enter_employee_id(self.emp_id)
         test_pim_add_employee.click_emp_search()
+        time.sleep(3)
         list_employees = driver.find_elements(By.XPATH, "//div[@class='oxd-table-card']/div")
 
         employee_found = False

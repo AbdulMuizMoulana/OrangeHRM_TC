@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class PIMContactDetailsPage:
-    contact_details_xpath = "//a[contains(text(),'Contact Details')]"
+    contact_details_xpath = "//a[normalize-space()='Contact Details']"
     street_1_input_xpath = "//label[normalize-space()='Street 1']/parent::div/following-sibling::div//input"
     Street_2_input_xpath = "//label[normalize-space()='Street 2']/parent::div/following-sibling::div//input"
     city_input_xpath = "//label[normalize-space()='City']/parent::div/following-sibling::div//input"
