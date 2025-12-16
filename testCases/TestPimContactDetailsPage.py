@@ -1,3 +1,5 @@
+import time
+
 import pytest
 from pathlib import Path
 
@@ -45,6 +47,7 @@ class TestPimContactDetailsPage:
         pim.enter_lastname("Doe")
         pim.enter_employee_id("adc123")
         pim.click_save_button()
+        time.sleep(3)
 
         # Contact details
         contact = PIMContactDetailsPage(driver)

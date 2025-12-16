@@ -24,7 +24,7 @@ class PIMContactDetailsPage:
     other_email_input_xpath = "//div/label[contains(normalize-space(),'Other Email')]/parent::div/following-sibling::div/input"
     save_contact_details_xpath = "//button[contains(normalize-space(), 'Save')]"
 
-    def __init__(self, driver, wait_timeout: int = 10):
+    def __init__(self, driver, wait_timeout: int = 15):
         self.driver = driver
         self.wait = WebDriverWait(driver, wait_timeout)
 
