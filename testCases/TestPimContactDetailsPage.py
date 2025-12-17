@@ -74,7 +74,7 @@ class TestPimContactDetailsPage:
         pim.enter_lastname("Doe")
 
         self.log.info("Entering Employee id")
-        pim.enter_employee_id("more331")
+        pim.enter_employee_id("mocc331")
 
         self.log.info("Saving new employee...")
         pim.click_save_button()

@@ -45,7 +45,7 @@ class PIMContactDetailsPage:
 
     # ---- actions ----
     def click_contact_details(self):
-        self._wait_visible(self.contact_details_xpath).click()
+        self._click_when_clickable(self.contact_details_xpath)
 
     def enter_street1(self, street_1):
         el = self._wait_visible(self.street_1_input_xpath)

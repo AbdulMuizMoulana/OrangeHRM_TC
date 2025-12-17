@@ -93,6 +93,7 @@ class TestPimPage:
         time.sleep(3)
 
         list_employees = driver.find_elements(By.XPATH, "//div[@class='oxd-table-card']/div")
+        time.sleep(3)
         employee_found = False
 
         for employee in list_employees:
