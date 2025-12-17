@@ -16,7 +16,7 @@ class PIMPage:
 
     # add attachment in employee list
     button_emloyee_list_xpath = "//a[contains(normalize-space(),'Employee List')]"
-    card_emp_details_xpath = "//div[text()='1232222']/parent::div/parent::div"
+    card_emp_details_xpath = "//div[text()='999']/parent::div/parent::div"
     button_attachment_add_xpath = "//button[text()=' Add ']"
     input_upload_file = "//input[@type='file']"
     textarea_xpath = "//textarea"
