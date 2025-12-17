@@ -105,25 +105,28 @@ def pytest_configure(config):
         config.option.htmlpath = _default_report_path()
 
 
+from pytest_html import extras
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
 
-    # Take screenshot only for failed tests
     if report.when == "call" and report.failed:
         driver = item.funcargs.get("setup", None)
+
         if driver:
             screenshot = driver.get_screenshot_as_base64()
 
             if hasattr(report, "extra"):
                 report.extra.append(
-                    extras.image(screenshot, mime_type="image/png")
+                    extras.png(screenshot, "Screenshot on failure")
                 )
             else:
                 report.extra = [
-                    extras.image(screenshot, mime_type="image/png")
+                    extras.png(screenshot, "Screenshot on failure")
                 ]
+
 
 # @pytest.hookimpl(hookwrapper=True)
 # def pytest_runtest_makereport(item, call):
