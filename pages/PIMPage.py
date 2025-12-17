@@ -112,7 +112,7 @@ class PIMPage:
             self._wait_presence(self.input_employee_name_xpath).send_keys(employee_name)
         except:
             self._wait_visible(self.dropdown_emp_information).click()
-            self._wait_presence(self.input_employee_name_xpath).send_keys(employee_name)
+            self._wait_visible(self.input_employee_name_xpath).send_keys(employee_name)
 
 
 
@@ -122,8 +122,8 @@ class PIMPage:
         try:
             self._wait_visible(self.button_search_xpath).click()
         except:
-            self._wait_visible(self.dropdown_emp_information).click()
-            self._wait_visible(self.button_search_xpath).click()
+            # self._wait_visible(self.dropdown_emp_information).click()
+            self._wait_presence(self.button_search_xpath).click()
 
     # def enter_employee_id(self,emp_id):
     #     self._wait_visible(self.input_emp_id_xpath).send_keys(emp_id)
