@@ -107,6 +107,8 @@ def pytest_configure(config):
 
 from pytest_html import extras
 
+from pytest_html import extras
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
@@ -114,18 +116,16 @@ def pytest_runtest_makereport(item, call):
 
     if report.when == "call" and report.failed:
         driver = item.funcargs.get("setup", None)
-
         if driver:
-            screenshot = driver.get_screenshot_as_base64()
+            png_b64 = driver.get_screenshot_as_base64()
+
+            # Attach screenshot as a proper PNG IMAGE
+            extra = extras.png(png_b64, "Screenshot on failure")
 
             if hasattr(report, "extra"):
-                report.extra.append(
-                    extras.png(screenshot, "Screenshot on failure")
-                )
+                report.extra.append(extra)
             else:
-                report.extra = [
-                    extras.png(screenshot, "Screenshot on failure")
-                ]
+                report.extra = [extra]
 
 
 # @pytest.hookimpl(hookwrapper=True)
