@@ -41,7 +41,7 @@ def setup(browser):
 
         if headless:
             options.add_argument("--lang=en-US")
-            options.add_argument("--headless=new")
+            options.add_argument("--headless")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--disable-gpu")
@@ -105,7 +105,7 @@ def pytest_configure(config):
         config.option.htmlpath = _default_report_path()
 
 
-from pytest_html import extras
+
 
 from pytest_html import extras
 
@@ -117,15 +117,23 @@ def pytest_runtest_makereport(item, call):
     if report.when == "call" and report.failed:
         driver = item.funcargs.get("setup", None)
         if driver:
-            png_b64 = driver.get_screenshot_as_base64()
+            try:
+                # Take screenshot in base64
+                png_b64 = driver.get_screenshot_as_base64()
 
-            # Attach screenshot as a proper PNG IMAGE
-            extra = extras.png(png_b64, "Screenshot on failure")
+                # IMPORTANT: remove whitespace + line breaks
+                png_b64 = png_b64.replace("\n", "").replace("\r", "").strip()
 
-            if hasattr(report, "extra"):
-                report.extra.append(extra)
-            else:
-                report.extra = [extra]
+                # Attach screenshot as proper PNG
+                extra = extras.png(png_b64, "Screenshot on failure")
+
+                if hasattr(report, "extra"):
+                    report.extra.append(extra)
+                else:
+                    report.extra = [extra]
+
+            except Exception as e:
+                print(f"Screenshot capture failed: {e}")
 
 
 # @pytest.hookimpl(hookwrapper=True)
