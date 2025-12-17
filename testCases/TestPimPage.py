@@ -225,10 +225,7 @@ class TestPimPage:
 
         pim.click_emp_search()
         self.log.info("Clicked Search Button")
-
-
-        error_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'No Records Found')]")
-
+        error_message = WebDriverWait(driver,10).until(EC.visibility_of_element_located((By.XPATH, "//p[contains(normalize-space(),'No Records Found')]")))
         if "No Records Found" in error_message.text:
             self.log.info("Negative search test passed: No Records Found displayed.")
             assert True
