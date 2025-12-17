@@ -221,7 +221,11 @@ class TestPimPage:
         time.sleep(3)
         pim.enter_employee_name("abcd1df3")
         time.sleep(3)
+        self.log.info("Clicking Search Button")
+
         pim.click_emp_search()
+        self.log.info("Clicked Search Button")
+
 
         error_message = driver.find_element(By.XPATH, "//p[contains(normalize-space(),'No Records Found')]")
 
