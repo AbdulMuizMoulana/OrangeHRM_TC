@@ -62,9 +62,9 @@ class TestLeavePage:
         leave.select_leave_type()
 
         self.log.info("Entering From Date")
-        leave.enter_from_date("2025-18-12")
+        leave.enter_from_date("2025-03-12")
 
-        leave.enter_to_date("2025-18-12")
+        leave.enter_to_date("2025-03-12")
 
         self.log.info("Selecting duration.")
         leave.select_duration()
@@ -135,8 +135,8 @@ class TestLeavePage:
         assign.enter_emp_name(self.emp_name)
 
         self.log.info("Entering From Date")
-        assign.enter_from_date("2025-22-12")
-        assign.enter_to_date("2025-22-12")
+        assign.enter_from_date("2025-04-12")
+        assign.enter_to_date("2025-04-12")
 
         self.log.info("Selecting assign leave type.")
         assign.select_assign_leave_type()

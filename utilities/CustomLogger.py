@@ -2,6 +2,11 @@ import logging
 from pathlib import Path
 from datetime import datetime
 
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+sys.stderr.reconfigure(encoding='utf-8')
+
+
 class ColorFormatter(logging.Formatter):
     # ANSI color codes
     COLORS = {
