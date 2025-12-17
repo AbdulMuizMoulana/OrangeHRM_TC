@@ -51,16 +51,12 @@ def setup(browser):
             options.add_argument("--high-dpi-support=1")
             options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
 
-
-
         service = ChromeService(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
 
         # IMPORTANT FIX
         if headless:
             driver.set_window_size(1920, 1080)
-
-
 
 
     elif browser_name == "firefox":
@@ -109,7 +105,6 @@ def pytest_configure(config):
         config.option.htmlpath = _default_report_path()
 
 
-
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
@@ -129,8 +124,6 @@ def pytest_runtest_makereport(item, call):
                 report.extra = [
                     extras.image(screenshot, mime_type="image/png")
                 ]
-
-
 
 # @pytest.hookimpl(hookwrapper=True)
 # def pytest_runtest_makereport(item, call):

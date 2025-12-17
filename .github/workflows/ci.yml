@@ -51,13 +51,22 @@ jobs:
           path: test-results/junit.xml
           if-no-files-found: ignore
 
+#      - name: Upload HTML report
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: html-report
+#          path: Reports/*.html
+#          if-no-files-found: ignore
+
       - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: html-report
+          name: pytest-html-report
           path: Reports/*.html
           if-no-files-found: ignore
+
 
       - name: Upload screenshots (for failures)
         if: always()
