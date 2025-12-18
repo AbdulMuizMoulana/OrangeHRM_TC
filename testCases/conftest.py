@@ -3,6 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
+from py.xml import html
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as GeckoService
@@ -12,7 +13,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
-from pytest_html import extras
+
+
 
 
 def pytest_addoption(parser):
@@ -99,9 +101,16 @@ def _default_report_path():
     filename = datetime.now().strftime("TestReport_%d-%m-%Y_%H-%M-%S.html")
     return str(reports_dir / filename)
 
-
 def pytest_configure(config):
-    if hasattr(config.option, "htmlpath"):
+    # Always set metadata
+    config._metadata = {
+        "Tester": "Abdul Muyeez",
+        "Project": "Login Automation",
+        "Browser": "Chrome"
+    }
+
+    # If PyCharm DID NOT pass --html, auto-generate a report
+    if not getattr(config.option, "htmlpath", None):
         config.option.htmlpath = _default_report_path()
 
 
@@ -135,6 +144,12 @@ def pytest_runtest_makereport(item, call):
             except Exception as e:
                 print(f"Screenshot capture failed: {e}")
 
+def pytest_html_results_summary(prefix, summary, postfix):
+    prefix.extend([html.div(id='piechart')])
+
+
+
+
 
 # @pytest.hookimpl(hookwrapper=True)
 # def pytest_runtest_makereport(item, call):
@@ -164,14 +179,16 @@ def pytest_runtest_makereport(item, call):
 #     filename = datetime.now().strftime("%d-%m-%y_%H-%M-%S") + ".html"
 #     return str(reports_dir / filename)
 #
-#
 # def pytest_configure(config):
-#     # Add custom metadata
 #     config._metadata = {
-#         "Tester": "Abdul Muyeez",
-#         "Project": "Login Automation",
-#         "Browser": "Chrome"
-#     }
-# # Set HTML report path if html plugin present and not already provided
+#             "Tester": "Abdul Muyeez",
+#             "Project": "Login Automation",
+#             "Browser": "Chrome"
+#         }
 #     if hasattr(config.option, "htmlpath") and not config.option.htmlpath:
 #         config.option.htmlpath = _default_report_path()
+
+#
+#
+#
+# # Set HTML report path if html plugin present and not already provided

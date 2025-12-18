@@ -5,3 +5,4 @@ pytest-html
 pytest-metadata
 openpyxl
 webdriver-manager
+py
