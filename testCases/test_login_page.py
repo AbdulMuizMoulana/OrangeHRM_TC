@@ -51,7 +51,7 @@ class TestHomePage:
         self.log.info("Verifying landing page...")
         try:
             heading = WebDriverWait(driver, 12).until(
-                EC.visibility_of_element_located((By.XPATH, "//h6"))
+                EC.visibility_of_element_located((By.XPATH, "//h5"))
             ).text
 
             self.log.info(f"Dashboard heading found: '{heading}'")
