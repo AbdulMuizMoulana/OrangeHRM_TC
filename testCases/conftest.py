@@ -13,8 +13,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
-
-
+passed_count = 0
+failed_count = 0
+skipped_count = 0
 
 
 def pytest_addoption(parser):
@@ -101,6 +102,7 @@ def _default_report_path():
     filename = datetime.now().strftime("TestReport_%d-%m-%Y_%H-%M-%S.html")
     return str(reports_dir / filename)
 
+
 def pytest_configure(config):
     # Always set metadata
     config._metadata = {
@@ -114,11 +116,7 @@ def pytest_configure(config):
         config.option.htmlpath = _default_report_path()
 
 
-
-
 from pytest_html import extras
-
-
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -146,6 +144,50 @@ def pytest_runtest_makereport(item, call):
 
             except Exception as e:
                 print(f"Screenshot capture failed: {e}")
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_logreport(report):
+    global passed_count, failed_count, skipped_count
+
+    if report.when == "call":
+        if report.passed:
+            passed_count += 1
+        elif report.failed:
+            failed_count += 1
+        elif report.skipped:
+            skipped_count += 1
+
+def pytest_html_results_summary(prefix, summary, postfix):
+    prefix.extend([
+        """
+        <h2>Test Execution Summary</h2>
+        <canvas id="resultChart" width="400" height="400"></canvas>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Passed', 'Failed', 'Skipped'],
+                    datasets: [{
+                        data: [%d, %d, %d],
+                        backgroundColor: [
+                            'rgb(75, 192, 192)',
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 205, 86)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: false
+                }
+            });
+        </script>
+        """ % (passed_count, failed_count, skipped_count)
+    ])
+
 
 #
 #
