@@ -151,7 +151,6 @@ def pytest_runtest_makereport(item, call):
                 print(f"Screenshot capture failed: {e}")
 
 
-@pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_logreport(report):
     global PASSED, FAILED, SKIPPED
 
@@ -163,36 +162,30 @@ def pytest_runtest_logreport(report):
         elif report.skipped:
             SKIPPED += 1
 
+
 def pytest_html_results_summary(prefix, summary, postfix):
     prefix.append(
         f"""
         <h2>Test Result Distribution</h2>
-
         <canvas id="resultChart" width="350" height="350"></canvas>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-            const ctx = document.getElementById('resultChart');
-            new Chart(ctx, {{
+            new Chart(document.getElementById('resultChart'), {{
                 type: 'pie',
                 data: {{
                     labels: ['Passed', 'Failed', 'Skipped'],
                     datasets: [{{
                         data: [{PASSED}, {FAILED}, {SKIPPED}],
-                        backgroundColor: [
-                            '#28a745',
-                            '#dc3545',
-                            '#ffc107'
-                        ]
+                        backgroundColor: ['#28a745', '#dc3545', '#ffc107']
                     }}]
                 }},
-                options: {{
-                    responsive: false
-                }}
+                options: {{ responsive: false }}
             }});
         </script>
         """
     )
+
 
 
 #
