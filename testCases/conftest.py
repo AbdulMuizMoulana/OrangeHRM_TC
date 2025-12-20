@@ -166,21 +166,68 @@ def pytest_runtest_logreport(report):
 def pytest_html_results_summary(prefix, summary, postfix):
     prefix.append(
         f"""
+        <style>
+            body {{
+                background-color: #121212 !important;
+                color: #e0e0e0 !important;
+            }}
+            h2 {{
+                color: #ffffff;
+            }}
+            canvas {{
+                background-color: #1e1e1e;
+                border-radius: 10px;
+                padding: 10px;
+            }}
+        </style>
+
         <h2>Test Result Distribution</h2>
-        <canvas id="resultChart" width="350" height="350"></canvas>
+
+        <canvas id="resultChart" width="360" height="360"></canvas>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
+            const passed = {PASSED};
+            const failed = {FAILED};
+            const skipped = {SKIPPED};
+            const total = passed + failed + skipped;
+
+            const dataValues = [passed, failed, skipped];
+            const labels = ['Passed', 'Failed', 'Skipped'];
+
             new Chart(document.getElementById('resultChart'), {{
                 type: 'pie',
                 data: {{
-                    labels: ['Passed', 'Failed', 'Skipped'],
+                    labels: labels,
                     datasets: [{{
-                        data: [{PASSED}, {FAILED}, {SKIPPED}],
-                        backgroundColor: ['#28a745', '#dc3545', '#ffc107']
+                        data: dataValues,
+                        backgroundColor: ['#2ecc71', '#e74c3c', '#f1c40f'],
+                        borderColor: '#121212',
+                        borderWidth: 2
                     }}]
                 }},
-                options: {{ responsive: false }}
+                options: {{
+                    responsive: false,
+                    plugins: {{
+                        tooltip: {{
+                            callbacks: {{
+                                label: function(context) {{
+                                    const value = context.raw;
+                                    const percent = ((value / total) * 100).toFixed(1);
+                                    return `${{context.label}}: ${{value}} (${{percent}}%)`;
+                                }}
+                            }}
+                        }},
+                        legend: {{
+                            labels: {{
+                                color: '#e0e0e0',
+                                font: {{
+                                    size: 14
+                                }}
+                            }}
+                        }}
+                    }}
+                }}
             }});
         </script>
         """
