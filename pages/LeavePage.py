@@ -94,4 +94,4 @@ class LeavePage:
             EC.visibility_of_element_located((By.XPATH, self.leave_type_annual_xpath))).click()
 
     def click_assign_submit(self):
-        self.driver.find_element(By.XPATH, self.button_assign_xpath).click()
+        WebDriverWait(self.driver,10).until(EC.element_to_be_clickable((By.XPATH, self.button_assign_xpath))).click()

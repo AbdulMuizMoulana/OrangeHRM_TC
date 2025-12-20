@@ -118,6 +118,9 @@ def pytest_configure(config):
 
 from pytest_html import extras
 
+
+
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
@@ -144,51 +147,54 @@ def pytest_runtest_makereport(item, call):
             except Exception as e:
                 print(f"Screenshot capture failed: {e}")
 
-def pytest_html_results_summary(prefix, summary, postfix):
-    prefix.extend([html.div(id='piechart')])
-
-
-
-
-
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     # FIX for pytest-html-reporter crash: only run if plugin exists
-#     try:
-#         from pytest_html import extras
-#     except ImportError:
-#         extras = None
-#
-#     outcome = yield
-#     report = outcome.get_result()
-#
-#     if extras and report.when == "call" and report.failed:
-#         driver = item.funcargs.get("setup")
-#         if driver:
-#             screenshot = driver.get_screenshot_as_base64()
-#             report.extra = getattr(report, "extra", [])
-#             report.extra.append(
-#                 extras.image(screenshot, mime_type="image/png")
-#             )
-
-
-# def _default_report_path() -> str:
-#     # Reports folder inside project root
-#     reports_dir = Path.cwd() / "Reports"
-#     reports_dir.mkdir(parents=True, exist_ok=True)
-#     filename = datetime.now().strftime("%d-%m-%y_%H-%M-%S") + ".html"
-#     return str(reports_dir / filename)
-#
-# def pytest_configure(config):
-#     config._metadata = {
-#             "Tester": "Abdul Muyeez",
-#             "Project": "Login Automation",
-#             "Browser": "Chrome"
-#         }
-#     if hasattr(config.option, "htmlpath") and not config.option.htmlpath:
-#         config.option.htmlpath = _default_report_path()
-
 #
 #
+# def pytest_html_results_summary(prefix, summary, postfix):
+#     # Convert None → 0  (VERY IMPORTANT)
+#     passed = getattr(summary, "passed", 0) or 0
+#     failed = getattr(summary, "failed", 0) or 0
+#     skipped = getattr(summary, "skipped", 0) or 0
 #
-# # Set HTML report path if html plugin present and not already provided
+#     prefix.extend([
+#         html.div(
+#             html.h3("Test Summary Pie Chart"),
+#             html.div(id="piechart", style="width:300px;height:300px;"),
+#         ),
+#         html.script(
+#             f"""
+#             window.onload = function() {{
+#                 let passed = {passed};
+#                 let failed = {failed};
+#                 let skipped = {skipped};
+#
+#                 let total = passed + failed + skipped;
+#                 if (total === 0) return;
+#
+#                 let canvas = document.createElement("canvas");
+#                 canvas.width = 300;
+#                 canvas.height = 300;
+#                 document.getElementById("piechart").appendChild(canvas);
+#
+#                 let ctx = canvas.getContext("2d");
+#                 let data = [
+#                     {{ label: "Passed", value: passed, color: "#4CAF50" }},
+#                     {{ label: "Failed", value: failed, color: "#F44336" }},
+#                     {{ label: "Skipped", value: skipped, color: "#FFC107" }}
+#                 ];
+#
+#                 let start = 0;
+#                 data.forEach(item => {{
+#                     if (item.value === 0) return;
+#                     let slice = (item.value / total) * 2 * Math.PI;
+#                     ctx.beginPath();
+#                     ctx.moveTo(150,150);
+#                     ctx.arc(150,150,150, start, start + slice);
+#                     ctx.closePath();
+#                     ctx.fillStyle = item.color;
+#                     ctx.fill();
+#                     start += slice;
+#                 }});
+#             }};
+#             """
+#         )
+#     ])
