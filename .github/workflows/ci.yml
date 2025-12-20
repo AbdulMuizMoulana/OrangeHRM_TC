@@ -38,42 +38,25 @@ jobs:
 
       - name: Run tests (pytest)
         run: |
-          mkdir -p test-results Reports screenshots   #  Capitalized to match conftest
+          mkdir -p test-results Reports screenshots
           pytest -v -s testCases/ \
-            --junitxml=test-results/junit.xml \
-            --html=Reports/pytest-report.html
-
-      - name: Upload pytest JUnit results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-junit
-          path: test-results/junit.xml
-          if-no-files-found: ignore
-
-#      - name: Upload HTML report
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: html-report
-#          path: Reports/*.html
-#          if-no-files-found: ignore
+            --html=Reports/pytest-report.html \
+            --self-contained-html
 
       - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pytest-html-report
-          path: Reports/*.html
-          if-no-files-found: ignore
-
+          path: Reports/pytest-report.html
+          if-no-files-found: error
 
       - name: Upload screenshots (for failures)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: screenshots
-          path: screenshots/         # ✅ Corrected path
+          path: screenshots/**
           if-no-files-found: ignore
 
 
