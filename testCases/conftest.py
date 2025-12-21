@@ -12,12 +12,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
-
-
 # ---------------- PIE CHART COUNTERS ----------------
 PASSED = 0
 FAILED = 0
 SKIPPED = 0
+
+
 # ---------------------------------------------------
 
 
@@ -105,6 +105,7 @@ def _default_report_path():
     filename = datetime.now().strftime("TestReport_%d-%m-%Y_%H-%M-%S.html")
     return str(reports_dir / filename)
 
+
 def pytest_configure(config):
     # Always set metadata
     config._metadata = {
@@ -118,10 +119,7 @@ def pytest_configure(config):
         config.option.htmlpath = _default_report_path()
 
 
-
 from pytest_html import extras
-
-
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -169,15 +167,27 @@ def pytest_html_results_summary(prefix, summary, postfix):
         <style>
             body {{
                 background-color: #121212 !important;
-                color: #e0e0e0 !important;
+                color: #E0E0E0 !important;
             }}
-            h2 {{
-                color: #ffffff;
+
+            h1 {{
+                color: #FFFFFF !important;
             }}
-            canvas {{
-                background-color: #1e1e1e;
-                border-radius: 10px;
-                padding: 10px;
+
+            h2, h3 {{
+                color: #F5F5F5 !important;
+            }}
+
+            table {{
+                color: #E0E0E0 !important;
+            }}
+
+            th {{
+                color: #FFFFFF !important;
+            }}
+
+            td {{
+                color: #E0E0E0 !important;
             }}
         </style>
 
@@ -192,15 +202,12 @@ def pytest_html_results_summary(prefix, summary, postfix):
             const skipped = {SKIPPED};
             const total = passed + failed + skipped;
 
-            const dataValues = [passed, failed, skipped];
-            const labels = ['Passed', 'Failed', 'Skipped'];
-
             new Chart(document.getElementById('resultChart'), {{
                 type: 'pie',
                 data: {{
-                    labels: labels,
+                    labels: ['Passed', 'Failed', 'Skipped'],
                     datasets: [{{
-                        data: dataValues,
+                        data: [passed, failed, skipped],
                         backgroundColor: ['#2ecc71', '#e74c3c', '#f1c40f'],
                         borderColor: '#121212',
                         borderWidth: 2
@@ -220,10 +227,8 @@ def pytest_html_results_summary(prefix, summary, postfix):
                         }},
                         legend: {{
                             labels: {{
-                                color: '#e0e0e0',
-                                font: {{
-                                    size: 14
-                                }}
+                                color: '#E0E0E0',
+                                font: {{ size: 14 }}
                             }}
                         }}
                     }}
@@ -232,7 +237,6 @@ def pytest_html_results_summary(prefix, summary, postfix):
         </script>
         """
     )
-
 
 
 #
