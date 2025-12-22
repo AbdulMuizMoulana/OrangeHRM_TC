@@ -238,6 +238,6 @@ screenshots/
 .env.local
 configuration/*.json
 configuration/*.env
-
+.env/
 =======
 >>>>>>> 1d8f6d6c2928b3a80743262cf3c431f09e5cacbc

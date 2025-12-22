@@ -18,8 +18,8 @@ class TestPimPage:
     emp_id = f"AUTO{int(time.time() % 100000)}"
     log = LogMaker.log_gen()
 
-    ess_username = ReadConfig.get_ess_username()
-    ess_password = ReadConfig.get_ess_password()
+    ess_username = ReadConfig.ESS_USERNAME
+    ess_password = ReadConfig.ESS_PASSWORD
 
     PROJECT_ROOT = Path(__file__).resolve().parents[1]
     attachment_file = PROJECT_ROOT / "AIO_TestCases.xlsx"

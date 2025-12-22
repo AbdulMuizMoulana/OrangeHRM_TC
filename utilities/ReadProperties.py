@@ -2,28 +2,44 @@ import os
 import configparser
 from dotenv import load_dotenv
 
+# Load .env
+load_dotenv()
+
+# ---------- Dynamic path ----------
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
+config_path = os.path.join(project_root, "configuration", "config.ini")
+# ----------------------------------
 
 config = configparser.RawConfigParser()
-
-# -------- FIXED PATH (Works on Windows + Linux + GitHub Actions) --------
-# Get project root dynamically
-current_dir = os.path.dirname(os.path.abspath(__file__))       # utilities/
-project_root = os.path.dirname(current_dir)                    # OrangeHRM_TC root
-config_path = os.path.join(project_root, "configuration", "config.ini")
-# ------------------------------------------------------------------------
-
-# Read the config.ini file
 config.read(config_path)
 
-load_dotenv()  # loads .env file
-
 class ReadConfig:
-    URL = os.getenv("URL")
-    USERNAME = os.getenv("USERNAME")
-    PASSWORD = os.getenv("PASSWORD")
+
+    # ---------- Non-secret config ----------
+    URL = config.get("credentials", "url", fallback=None)
+
+    # ---------- Secrets from .env / GitHub ----------
+    USERNAME = os.getenv("ADMIN_USERNAME")
+    PASSWORD = os.getenv("ADMIN_PASSWORD")
     ESS_USERNAME = os.getenv("ESS_USERNAME")
     ESS_PASSWORD = os.getenv("ESS_PASSWORD")
 
+    # @staticmethod
+    # def validate():
+    #     missing = []
+    #     for key, value in {
+    #         "URL": ReadConfig.URL,
+    #         "USERNAME": ReadConfig.USERNAME,
+    #         "PASSWORD": ReadConfig.PASSWORD,
+    #     }.items():
+    #         if not value:
+    #             missing.append(key)
+    #
+    #     if missing:
+    #         raise EnvironmentError(
+    #             f"Missing environment variables: {', '.join(missing)}"
+    #         )
 
 
 
