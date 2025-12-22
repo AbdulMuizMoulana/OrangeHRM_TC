@@ -106,15 +106,19 @@ def _default_report_path():
     return str(reports_dir / filename)
 
 
-def pytest_configure(config):
-    # Always set metadata
-    config._metadata = {
-        "Tester": "Abdul Muyeez",
-        "Project": "Login Automation",
-        "Browser": "Chrome"
-    }
+def pytest_html_report_title(report):
+    report.title = "OrangeHRM Automation Test Report"
 
-    # If PyCharm DID NOT pass --html, auto-generate a report
+def pytest_metadata(metadata):
+    metadata["Tester"] = "Abdul Muyeez"
+    metadata["Project"] = "OrangeHRM Automation"
+    metadata["Framework"] = "Pytest + Selenium"
+    metadata["Browser"] = "Chrome (Headless in CI)"
+    metadata["Execution"] = "GitHub Actions"
+
+
+def pytest_configure(config):
+    # Auto-generate report path if not provided
     if not getattr(config.option, "htmlpath", None):
         config.option.htmlpath = _default_report_path()
 
@@ -171,6 +175,10 @@ def pytest_html_results_summary(prefix, summary, postfix):
             }}
 
             h1 {{
+                padding : 5px 0px;
+                border-radius : 12px;
+                background: linear-gradient(to right, #ff7a18, #ff9900);
+                text-align: center;
                 color: #FFFFFF !important;
             }}
 
@@ -187,7 +195,18 @@ def pytest_html_results_summary(prefix, summary, postfix):
             }}
 
             td {{
+                background-color: #121212 !important;
                 color: #E0E0E0 !important;
+            }}
+            
+            p {{
+            color: #FFFFFF !important;
+            }}
+            
+            canvas {{
+            padding: 15px;
+            border-radius: 12px;
+            background-color: #E0E0E0 !important;
             }}
         </style>
 
@@ -208,9 +227,9 @@ def pytest_html_results_summary(prefix, summary, postfix):
                     labels: ['Passed', 'Failed', 'Skipped'],
                     datasets: [{{
                         data: [passed, failed, skipped],
-                        backgroundColor: ['#2ecc71', '#e74c3c', '#f1c40f'],
+                        backgroundColor: ['#2ecc71', '#FF0000', '#f1c40f'],
                         borderColor: '#121212',
-                        borderWidth: 2
+                        borderWidth: 1
                     }}]
                 }},
                 options: {{
@@ -227,7 +246,7 @@ def pytest_html_results_summary(prefix, summary, postfix):
                         }},
                         legend: {{
                             labels: {{
-                                color: '#E0E0E0',
+                                color: '#000000',
                                 font: {{ size: 14 }}
                             }}
                         }}
@@ -238,55 +257,34 @@ def pytest_html_results_summary(prefix, summary, postfix):
         """
     )
 
+    prefix.insert(0, """
+        <div style="
+            background: #1e1e1e;
+            color: #ffffff;
+            text-align: center;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 32px;
+            font-weight: bold;
+        ">
+        </div>
+    """)
 
-#
-#
-# def pytest_html_results_summary(prefix, summary, postfix):
-#     # Convert None → 0  (VERY IMPORTANT)
-#     passed = getattr(summary, "passed", 0) or 0
-#     failed = getattr(summary, "failed", 0) or 0
-#     skipped = getattr(summary, "skipped", 0) or 0
-#
-#     prefix.extend([
-#         html.div(
-#             html.h3("Test Summary Pie Chart"),
-#             html.div(id="piechart", style="width:300px;height:300px;"),
-#         ),
-#         html.script(
-#             f"""
-#             window.onload = function() {{
-#                 let passed = {passed};
-#                 let failed = {failed};
-#                 let skipped = {skipped};
-#
-#                 let total = passed + failed + skipped;
-#                 if (total === 0) return;
-#
-#                 let canvas = document.createElement("canvas");
-#                 canvas.width = 300;
-#                 canvas.height = 300;
-#                 document.getElementById("piechart").appendChild(canvas);
-#
-#                 let ctx = canvas.getContext("2d");
-#                 let data = [
-#                     {{ label: "Passed", value: passed, color: "#4CAF50" }},
-#                     {{ label: "Failed", value: failed, color: "#F44336" }},
-#                     {{ label: "Skipped", value: skipped, color: "#FFC107" }}
-#                 ];
-#
-#                 let start = 0;
-#                 data.forEach(item => {{
-#                     if (item.value === 0) return;
-#                     let slice = (item.value / total) * 2 * Math.PI;
-#                     ctx.beginPath();
-#                     ctx.moveTo(150,150);
-#                     ctx.arc(150,150,150, start, start + slice);
-#                     ctx.closePath();
-#                     ctx.fillStyle = item.color;
-#                     ctx.fill();
-#                     start += slice;
-#                 }});
-#             }};
-#             """
-#         )
-#     ])
+    # prefix.insert(0, """
+    #     <div style="
+    #         background:#1e1e1e;
+    #         padding:15px;
+    #         border-radius:10px;
+    #         margin-bottom:20px;
+    #     ">
+    #         <h1 style="color:#FFFFFF; margin:0;">
+    #             OrangeHRM Automation Test Report
+    #         </h1>
+    #         <p style="color:#E0E0E0; margin:5px 0 0 0;">
+    #             Tester: <b>Abdul Muyeez</b> |
+    #             Framework: Pytest + Selenium |
+    #             Execution: CI (GitHub Actions)
+    #         </p>
+    #     </div>
+    # """)
