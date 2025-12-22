@@ -16,6 +16,12 @@ jobs:
       PYTHONUNBUFFERED: "1"
       PYTEST_ADDOPTS: "--log-cli-level=INFO"   #  Show logs in GitHub Actions
 
+      # 🔐 GitHub Secrets (ADDED)
+      APP_USERNAME: ${{ secrets.APP_USERNAME }}
+      APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+      ESS_USERNAME: ${{ secrets.ESS_USERNAME }}
+      ESS_PASSWORD: ${{ secrets.ESS_PASSWORD }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -58,6 +64,3 @@ jobs:
           name: screenshots
           path: screenshots/**
           if-no-files-found: ignore
-
-
-
