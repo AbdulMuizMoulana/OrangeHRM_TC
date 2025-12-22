@@ -13,9 +13,9 @@ from utilities.CustomLogger import LogMaker
 
 
 class TestUpdateMyInfo:
-    username = ReadConfig.get_username()
-    password = ReadConfig.get_password()
-    BASE_URL = ReadConfig.get_base_url()
+    username = ReadConfig.USERNAME
+    password = ReadConfig.PASSWORD
+    BASE_URL = ReadConfig.URL
     log = LogMaker.log_gen()
 
     new_f_name = "akash"

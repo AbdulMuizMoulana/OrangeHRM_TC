@@ -14,14 +14,14 @@ from utilities.CustomLogger import LogMaker
 
 
 class TestLeavePage:
-    username = ReadConfig.get_username()
-    password = ReadConfig.get_password()
+    username = ReadConfig.USERNAME
+    password = ReadConfig.PASSWORD
     log = LogMaker.log_gen()
 
     emp_name = "abdul"
-    ess_username = ReadConfig.get_ess_username()
-    ess_password = ReadConfig.get_ess_password()
-    BASE_URL = ReadConfig.get_base_url()
+    ess_username = ReadConfig.ESS_USERNAME
+    ess_password = ReadConfig.ESS_PASSWORD
+    BASE_URL = ReadConfig.URL
 
     SCREENSHOT_DIR = Path.cwd() / "screenshots"
     SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)

@@ -109,6 +109,7 @@ def _default_report_path():
 def pytest_html_report_title(report):
     report.title = "OrangeHRM Automation Test Report"
 
+
 def pytest_metadata(metadata):
     metadata["Tester"] = "Abdul Muyeez"
     metadata["Project"] = "OrangeHRM Automation"
@@ -198,11 +199,11 @@ def pytest_html_results_summary(prefix, summary, postfix):
                 background-color: #121212 !important;
                 color: #E0E0E0 !important;
             }}
-            
+
             p {{
             color: #FFFFFF !important;
             }}
-            
+
             canvas {{
             padding: 15px;
             border-radius: 12px;

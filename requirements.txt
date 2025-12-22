@@ -6,3 +6,5 @@ pytest-metadata
 openpyxl
 webdriver-manager
 py
+python-dotenv
+

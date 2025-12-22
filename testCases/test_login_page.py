@@ -12,9 +12,9 @@ from utilities.CustomLogger import LogMaker
 
 
 class TestHomePage:
-    BASE_URL = ReadConfig.get_base_url()
-    username = ReadConfig.get_username()
-    password = ReadConfig.get_password()
+    username = ReadConfig.USERNAME
+    password = ReadConfig.PASSWORD
+    BASE_URL = ReadConfig.URL
     log = LogMaker.log_gen()
 
     SCREENSHOT_DIR = Path.cwd() / "screenshots"
