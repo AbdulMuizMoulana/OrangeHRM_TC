@@ -157,13 +157,17 @@ def pytest_runtest_makereport(item, call):
 def pytest_runtest_logreport(report):
     global PASSED, FAILED, SKIPPED
 
+    # PASSED / FAILED → only during call
     if report.when == "call":
         if report.passed:
             PASSED += 1
         elif report.failed:
             FAILED += 1
-        elif report.skipped:
-            SKIPPED += 1
+
+    # SKIPPED → can happen in setup OR call
+    if report.skipped:
+        SKIPPED += 1
+
 
 
 def pytest_html_results_summary(prefix, summary, postfix):
