@@ -3,7 +3,11 @@ import configparser
 from dotenv import load_dotenv
 
 # Load .env
-load_dotenv()
+# load_dotenv()
+
+# Load .env ONLY locally, NOT in GitHub Actions
+if not os.getenv("GITHUB_ACTIONS"):
+    load_dotenv()
 
 # ---------- Dynamic path ----------
 current_dir = os.path.dirname(os.path.abspath(__file__))

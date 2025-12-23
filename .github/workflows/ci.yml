@@ -23,6 +23,11 @@ jobs:
       ESS_PASSWORD: ${{ secrets.ESS_PASSWORD }}
 
     steps:
+      - name: Debug env vars (safe)
+        run: |
+          echo "APP_USERNAME is set? -> ${APP_USERNAME:+YES}"
+          echo "ESS_USERNAME is set? -> ${ESS_USERNAME:+YES}"  
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -64,3 +69,4 @@ jobs:
           name: screenshots
           path: screenshots/**
           if-no-files-found: ignore
+
