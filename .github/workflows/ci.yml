@@ -17,15 +17,15 @@ jobs:
       PYTEST_ADDOPTS: "--log-cli-level=INFO"   #  Show logs in GitHub Actions
 
       # 🔐 GitHub Secrets (ADDED)
-      APP_USERNAME: ${{ secrets.APP_USERNAME }}
-      APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+      ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       ESS_USERNAME: ${{ secrets.ESS_USERNAME }}
       ESS_PASSWORD: ${{ secrets.ESS_PASSWORD }}
 
     steps:
       - name: Debug env vars (safe)
         run: |
-          echo "APP_USERNAME is set? -> ${APP_USERNAME:+YES}"
+          echo "APP_USERNAME is set? -> ${ADMIN_USERNAME:+YES}"
           echo "ESS_USERNAME is set? -> ${ESS_USERNAME:+YES}"  
 
       - name: Checkout repository
